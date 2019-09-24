@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -20,5 +21,7 @@ namespace OnlineStore.Models.Database
 
         [Column("DISCOUNT")]
         public int? Discount { get; set; }
+
+        public virtual List<Order> Orders { get; set; }
     }
 }

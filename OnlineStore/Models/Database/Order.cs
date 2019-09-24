@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using OnlineStore.Models.Enums;
@@ -7,16 +8,13 @@ namespace OnlineStore.Models.Database
 {
     public class Order
     {
-        [Required]
-        [Column("ID")]
+        [Required] [Column("ID")]
         public Guid Id { get; set; }
 
-        [Required]
-        [Column("CUSTOMER_ID")]
+        [Required] [Column("CUSTOMER_ID")]
         public Guid CustomerId { get; set; }
 
-        [Required]
-        [ForeignKey("CustomerId")]
+        [Required] [ForeignKey("CustomerId")]
         public Customer Customer { get; set; }
 
         [Required]
@@ -24,7 +22,7 @@ namespace OnlineStore.Models.Database
         public DateTime? OrderDate { get; set; }
 
         [Required]
-        [Column("SHIPMENT_DATE",TypeName = "date")]
+        [Column("SHIPMENT_DATE", TypeName = "date")]
         public DateTime? ShipmentDate { get; set; }
 
         [Column("ORDER_NUMBER")]
@@ -32,5 +30,7 @@ namespace OnlineStore.Models.Database
 
         [Column("STATUS")]
         public OrderStatus Status { get; set; }
+
+        public virtual List<OrderItem> OrderItems { get; set; }
     }
 }

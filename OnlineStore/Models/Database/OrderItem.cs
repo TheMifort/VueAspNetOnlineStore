@@ -24,7 +24,7 @@ namespace OnlineStore.Models.Database
 
         [Required]
         [ForeignKey("ItemId")]
-        public Item Item { get; set; }
+        public virtual Item Item { get; set; }
 
         [Required]
         [Column("ITEMS_COUNT")]
