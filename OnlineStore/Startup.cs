@@ -1,4 +1,6 @@
 using System;
+using System.Reflection;
+using AutoMapper;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
@@ -9,6 +11,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
+using OnlineStore.Areas.Items;
 using OnlineStore.Database;
 using OnlineStore.Helpers;
 using OnlineStore.Models;
@@ -69,6 +72,11 @@ namespace OnlineStore
 
             services.AddIdentity<User, IdentityRole>()
                 .AddEntityFrameworkStores<DatabaseContext>().AddDefaultTokenProviders();
+
+            services.AddAutoMapper(configAction: cfg =>
+            {
+                new ItemsMapperInit().MapperInit(cfg);
+            }, Assembly.GetAssembly(GetType()));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -85,10 +93,7 @@ namespace OnlineStore
 
             app.UseAuthorization();
 
-            app.UseEndpoints(endpoints =>
-            {
-                endpoints.MapControllers();
-            });
+            app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
 
             using (var scope = app.ApplicationServices.CreateScope())
             {
@@ -101,7 +106,6 @@ namespace OnlineStore
                 spa.Options.SourcePath = "client-app";
                 if (env.IsDevelopment())
                 {
-
                     spa.UseVueDevelopmentServer();
                 }
             });
