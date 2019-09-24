@@ -17,23 +17,23 @@ namespace OnlineStore.Areas.Items.Controllers
     public class ItemsController : ControllerBase
     {
         private readonly DatabaseContext _databaseContext;
-        private readonly Mapper _mapper;
+        private readonly IMapper _mapper;
 
-        public ItemsController(DatabaseContext databaseContext, Mapper mapper)
+        public ItemsController(DatabaseContext databaseContext, IMapper mapper)
         {
             _databaseContext = databaseContext;
             _mapper = mapper;
         }
 
         // GET: api/Items
-        [HttpGet("GetAll\\{filter}")]
+        [HttpGet("{filter?}")]
         public IEnumerable<ItemResponseModel> GetAll() //TODO Filters
         {
             return _mapper.Map<IEnumerable<Item>, IEnumerable<ItemResponseModel>>(_databaseContext.Items.ToList());
         }
 
         // GET: api/Items/5
-        [HttpGet("{id}", Name = "Get")]
+        [HttpGet("{id:guid}", Name = "Get")]
         public ItemResponseModel Get(Guid id)
         {
             return _mapper.Map<Item, ItemResponseModel>(_databaseContext.Items.FirstOrDefault(e => e.Id == id));
@@ -60,7 +60,8 @@ namespace OnlineStore.Areas.Items.Controllers
             if (ModelState.IsValid)
             {
                 value.Id = id;
-                _databaseContext.Entry(value).State = EntityState.Modified;
+                var entry = _mapper.Map<ItemRequestModel, Item>(value);
+                _databaseContext.Entry(entry).State = EntityState.Modified;
                 await _databaseContext.SaveChangesAsync();
                 return Ok();
             }
