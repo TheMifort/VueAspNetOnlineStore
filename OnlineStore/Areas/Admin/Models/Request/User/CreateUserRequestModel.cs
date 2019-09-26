@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace OnlineStore.Areas.Admin.Models.Request.Admin
+namespace OnlineStore.Areas.Admin.Models.Request.User
 {
     public class CreateUserRequestModel
     {

@@ -23,12 +23,12 @@ namespace OnlineStore.Areas.Admin.Controllers
 
         public async Task<IActionResult> GetUsers()
         {
-            var result = new List<UserResponseModel>();
+            var result = new List<RoleUserResponseModel>();
 
             foreach (var user in _userManager.Users)
             {
                 var roles = await _userManager.GetRolesAsync(user);
-                result.Add(new UserResponseModel
+                result.Add(new RoleUserResponseModel
                 {
                     Id = user.Id,
                     UserName =  user.UserName,

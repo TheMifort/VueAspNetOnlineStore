@@ -50,6 +50,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Areas\Admin\Models\Request\Admin\" />
     <Folder Include="Models\Database\" />
   </ItemGroup>
 

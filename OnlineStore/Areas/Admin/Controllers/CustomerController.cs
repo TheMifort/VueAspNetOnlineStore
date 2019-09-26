@@ -12,7 +12,7 @@ using OnlineStore.Models.Database;
 
 namespace OnlineStore.Areas.Admin.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/[area]/[controller]")]
     [ApiController]
     public class CustomerController : ControllerBase
     {
