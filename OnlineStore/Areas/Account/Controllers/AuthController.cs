@@ -26,7 +26,7 @@ namespace OnlineStore.Areas.Account.Controllers
         {
             _userManager = userManager;
             _databaseContext = databaseContext;
-            _identityWorker = new IdentityWorker(userManager, databaseContext, authOptions);//TODO Add to DI
+            _identityWorker = new IdentityWorker(userManager, databaseContext, authOptions); //TODO Add to DI
         }
 
         [HttpPost("Token")]
@@ -53,14 +53,16 @@ namespace OnlineStore.Areas.Account.Controllers
                 {
                     var refreshToken = _identityWorker.GenerateRefreshToken();
                     var expiresAt = DateTime.Now.ToUniversalTime().Add(new TimeSpan(days: 30, 0, 0, 0));
+                    var role = User.IsInRole("Admin") ? "Admin" : (User.IsInRole("Manager") ? "Manager" : "User");
                     var response = new AuthUserResponseModel
                     {
                         AccessToken = _identityWorker.GenerateJwtToken(identity),
                         RefreshToken = refreshToken,
                         Name = identity.Name,
-                        ExpiresAt = expiresAt
+                        ExpiresAt = expiresAt,
+                        Role = role
                     };
-                    
+
                     refreshTokenEntry.Token = refreshToken;
                     refreshTokenEntry.ExpiresAt = expiresAt;
                     await _databaseContext.SaveChangesAsync();
@@ -90,12 +92,14 @@ namespace OnlineStore.Areas.Account.Controllers
                 {
                     var refreshToken = _identityWorker.GenerateRefreshToken();
                     var expiresAt = DateTime.Now.ToUniversalTime().Add(new TimeSpan(days: 30, 0, 0, 0));
+                    var role = User.IsInRole("Admin") ? "Admin" : (User.IsInRole("Manager") ? "Manager" : "User");
                     var response = new AuthUserResponseModel
                     {
                         AccessToken = _identityWorker.GenerateJwtToken(identity),
                         RefreshToken = refreshToken,
                         Name = identity.Name,
-                        ExpiresAt = expiresAt
+                        ExpiresAt = expiresAt,
+                        Role = role
                     };
                     var user = await _userManager.GetUserAsync(User);
                     user.RefreshTokens.Add(new RefreshToken
