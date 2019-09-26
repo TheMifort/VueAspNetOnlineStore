@@ -1,7 +1,10 @@
-﻿using AutoMapper;
+﻿using System;
+using AutoMapper;
 using OnlineStore.Abstract;
 using OnlineStore.Areas.Items.Models.Request.Items;
+using OnlineStore.Areas.Items.Models.Request.Order;
 using OnlineStore.Areas.Items.Models.Response.Items;
+using OnlineStore.Areas.Items.Models.Response.Order;
 using OnlineStore.Models.Database;
 
 namespace OnlineStore.Areas.Items
@@ -10,8 +13,18 @@ namespace OnlineStore.Areas.Items
     {
         public void MapperInit(IMapperConfigurationExpression config)
         {
+            var random = new Random();
+
             config.CreateMap<Item, ItemResponseModel>();
             config.CreateMap<ItemRequestModel, Item>();
+
+            config.CreateMap<OrderItem, OrderItemResponseModel>();
+            config.CreateMap<Order, OrderResponseModel>();
+
+            config.CreateMap<OrderItemRequestModel, Order>();
+            config.CreateMap<OrderRequestModel, Order>()
+                .ForMember(e => e.OrderNumber, e => e.MapFrom(l => random.Next()))
+                .ForMember(e => e.OrderDate, e => e.MapFrom(l => DateTime.Now));
         }
     }
 }
