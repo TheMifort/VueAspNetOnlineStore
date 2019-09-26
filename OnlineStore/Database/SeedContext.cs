@@ -16,7 +16,7 @@ namespace OnlineStore.Database
             {
                 "Admin",
                 "Manager",
-                "Customer"
+                "User"
             };
 
             var user = new User

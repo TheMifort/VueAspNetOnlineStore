@@ -23,5 +23,6 @@ namespace OnlineStore.Models.Database
         public int? Discount { get; set; }
 
         public virtual List<Order> Orders { get; set; }
+        public virtual List<User> Users { get; set; }
     }
 }

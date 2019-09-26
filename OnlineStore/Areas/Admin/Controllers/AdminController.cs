@@ -1,12 +1,12 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using OnlineStore.Areas.Account.Models.Request.Admin;
+using OnlineStore.Areas.Admin.Models.Request.Admin;
 using OnlineStore.Models.Database;
 
-namespace OnlineStore.Areas.Account.Controllers
+namespace OnlineStore.Areas.Admin.Controllers
 {
-    [Route("api/[area]/[controller]")]
+    [Route("api/[controller]")]
     [Area("Account")]
     public class AdminController : ControllerBase
     {
