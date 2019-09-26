@@ -11,6 +11,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
+using OnlineStore.Areas.Admin;
 using OnlineStore.Areas.Items;
 using OnlineStore.Database;
 using OnlineStore.Helpers;
@@ -76,6 +77,7 @@ namespace OnlineStore
             services.AddAutoMapper(configAction: cfg =>
             {
                 new ItemsMapperInit().MapperInit(cfg);
+                new AdminMapperInit().MapperInit(cfg);
             }, Assembly.GetAssembly(GetType()));
         }
 
