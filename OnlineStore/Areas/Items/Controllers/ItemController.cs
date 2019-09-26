@@ -12,14 +12,14 @@ using OnlineStore.Models.Database;
 
 namespace OnlineStore.Areas.Items.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/[area]")]
     [ApiController]
-    public class ItemsController : ControllerBase
+    public class ItemController : ControllerBase
     {
         private readonly DatabaseContext _databaseContext;
         private readonly IMapper _mapper;
 
-        public ItemsController(DatabaseContext databaseContext, IMapper mapper)
+        public ItemController(DatabaseContext databaseContext, IMapper mapper)
         {
             _databaseContext = databaseContext;
             _mapper = mapper;
