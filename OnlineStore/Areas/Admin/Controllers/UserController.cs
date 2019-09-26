@@ -6,7 +6,6 @@ using AutoMapper;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using OnlineStore.Areas.Admin.Models.Request.Customer;
 using OnlineStore.Areas.Admin.Models.Request.User;
 using OnlineStore.Areas.Admin.Models.Response.Customer;
 using OnlineStore.Areas.Admin.Models.Response.User;
@@ -86,11 +85,11 @@ namespace OnlineStore.Areas.Admin.Controllers
 
         // PUT: api/Items/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> Put(Guid id, [FromBody] UserRequestModel model)
+        public async Task<IActionResult> Put(string id, [FromBody] UserRequestModel model)
         {
             if (ModelState.IsValid)
             {
-                var user = await _userManager.FindByIdAsync(model.Id);
+                var user = await _userManager.FindByIdAsync(id);
                 user.Customer = await _databaseContext.Customers.FirstOrDefaultAsync(e => e.Id == model.Customer.Id);
 
                 var userRoles = await _userManager.GetRolesAsync(user);
