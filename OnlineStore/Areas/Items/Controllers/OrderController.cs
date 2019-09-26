@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace OnlineStore.Areas.Items.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/[area]/[controller]")]
     [ApiController]
     public class OrderController : ControllerBase
     {

@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -14,7 +13,7 @@ using OnlineStore.Models.Database;
 
 namespace OnlineStore.Areas.Admin.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/[area]/[controller]")]
     [ApiController]
     public class UserController : ControllerBase
     {
