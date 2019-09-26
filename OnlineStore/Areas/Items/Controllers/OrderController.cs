@@ -34,8 +34,11 @@ namespace OnlineStore.Areas.Items.Controllers
         public async Task<IEnumerable<OrderResponseModel>> Get()
         {
             var user = await _userManager.GetUserAsync(User);
+            List<Order> orders;
+            if (!User.IsInRole("Admin") && !User.IsInRole("Manager"))
+                orders = user.Customer?.Orders?.ToList() ?? new List<Order>();
 
-            var orders = user.Customer?.Orders?.ToList() ?? new List<Order>();
+            else orders = _context.Orders.ToList();
 
             return _mapper.Map<IEnumerable<Order>, IEnumerable<OrderResponseModel>>(orders);
         }
@@ -61,7 +64,7 @@ namespace OnlineStore.Areas.Items.Controllers
                     {
                         Item = item,
                         ItemPrice = item.Price - discount > 0 ? item.Price * discount : 0,
-                        ItemsCount =  modelItem.ItemsCount
+                        ItemsCount = modelItem.ItemsCount
                     };
 
                     order.OrderItems.Add(orderItem);
