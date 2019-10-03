@@ -1,11 +1,8 @@
-﻿using System;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using OnlineStore.Areas.Account.Models.Request.Account;
-using OnlineStore.Database;
 using OnlineStore.Models.Database;
 
 namespace OnlineStore.Areas.Account.Controllers
@@ -15,69 +12,41 @@ namespace OnlineStore.Areas.Account.Controllers
     [Area("Account")]
     public class AccountController : ControllerBase
     {
-        private readonly DatabaseContext _databaseContext;
-        private readonly UserManager<User> _userManager;
+        private readonly SignInManager<User> _signInManager;
 
-        public AccountController(DatabaseContext databaseContext, UserManager<User> userManager)
+        public AccountController(SignInManager<User> signInManager)
         {
-            _databaseContext = databaseContext;
-            _userManager = userManager;
+            _signInManager = signInManager;
         }
 
-        [HttpPost("signout")]
-        public async Task<IActionResult> SignOut([FromBody] SignOutRequestModel request)
+        [HttpPost]
+        [AllowAnonymous]
+        public async Task<IActionResult> Login(LoginRequestModel model)
         {
-            if (!string.IsNullOrEmpty(request?.RefreshToken))
+            if (ModelState.IsValid)
             {
-                var user = await _userManager.GetUserAsync(User);
-
-                var refreshTokenEntry =
-                    user.RefreshTokens.FirstOrDefault(e =>
-                        e.Token == request.RefreshToken);
-
-                if (refreshTokenEntry == null)
+                var result =
+                    await _signInManager.PasswordSignInAsync(model.UserName, model.Password, true, false);
+                if (result.Succeeded)
                 {
-                    ModelState.TryAddModelError("RefreshToken.Invalid", "RefreshToken неверен");
-                    return BadRequest(ModelState);
+                    return Ok();
                 }
-
-                user.RefreshTokens.Remove(refreshTokenEntry);
-
-                await _databaseContext.SaveChangesAsync();
-
-                return new OkResult();
+                else
+                {
+                    ModelState.AddModelError("", "Неправильный логин и (или) пароль");
+                }
             }
 
-            ModelState.TryAddModelError("RefreshToken.Invalid", "RefreshToken неверен");
-            return BadRequest(ModelState);
+            return BadRequest();
         }
 
-        [HttpPost("signoutall")]
-        public async Task<IActionResult> SignOutAll([FromBody] SignOutAllRequestModel request)
+        [HttpGet]
+        [Authorize]
+        public async Task<IActionResult> LogOff()
         {
-            if (!string.IsNullOrEmpty(request?.RefreshToken))
-            {
-                var user = await _userManager.GetUserAsync(User);
-
-                var refreshTokenEntry =
-                    user.RefreshTokens.FirstOrDefault(e =>
-                        e.Token == request.RefreshToken && e.ExpiresAt > DateTime.Now.ToUniversalTime());
-
-                if (refreshTokenEntry == null)
-                {
-                    ModelState.TryAddModelError("RefreshToken.Invalid", "RefreshToken неверен");
-                    return BadRequest(ModelState);
-                }
-
-                user.RefreshTokens.RemoveAll(e => request.SaveCurrentLogin == false || e.Id != refreshTokenEntry.Id);
-
-                await _databaseContext.SaveChangesAsync();
-
-                return new OkResult();
-            }
-
-            ModelState.TryAddModelError("RefreshToken.Invalid", "RefreshToken неверен");
-            return BadRequest(ModelState);
+            // удаляем аутентификационные куки
+            await _signInManager.SignOutAsync();
+            return Ok();
         }
     }
 }
