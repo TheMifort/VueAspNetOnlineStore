@@ -1,8 +1,5 @@
-using System;
 using System.Reflection;
 using AutoMapper;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
@@ -10,12 +7,10 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.IdentityModel.Tokens;
 using OnlineStore.Areas.Admin;
 using OnlineStore.Areas.Items;
 using OnlineStore.Database;
 using OnlineStore.Helpers;
-using OnlineStore.Models;
 using OnlineStore.Models.Database;
 
 namespace OnlineStore
