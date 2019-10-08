@@ -8,7 +8,7 @@ using OnlineStore.Models.Database;
 namespace OnlineStore.Areas.Account.Controllers
 {
     [Authorize]
-    [Route("api/[controller]")]
+    [Route("api/[area]")]
     [Area("Account")]
     public class AccountController : ControllerBase
     {
@@ -19,9 +19,9 @@ namespace OnlineStore.Areas.Account.Controllers
             _signInManager = signInManager;
         }
 
-        [HttpPost]
+        [HttpPost("[action]")]
         [AllowAnonymous]
-        public async Task<IActionResult> Login(LoginRequestModel model)
+        public async Task<IActionResult> Login([FromBody]LoginRequestModel model)
         {
             if (ModelState.IsValid)
             {

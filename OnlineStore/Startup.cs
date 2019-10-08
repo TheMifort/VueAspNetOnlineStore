@@ -63,10 +63,6 @@ namespace OnlineStore
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
-                //endpoints.MapControllerRoute(
-                //    name: "areaRoute",
-                //    pattern: "{area:exists}/{controller}/{action}",
-                //    defaults: new { action = "Index" });
             });
 
             using (var scope = app.ApplicationServices.CreateScope())

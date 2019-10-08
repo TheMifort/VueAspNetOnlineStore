@@ -29,7 +29,9 @@
         methods: {
             login: function () {
                 const { username, password } = this;
-                alert(password);
+                this.$store.dispatch("AUTH_REQUEST", { username, password }).then(() => {
+                    alert();
+                });
             }
         }
     }</script>
