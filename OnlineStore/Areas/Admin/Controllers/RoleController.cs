@@ -10,6 +10,7 @@ using OnlineStore.Models.Database;
 namespace OnlineStore.Areas.Admin.Controllers
 {
     [Route("api/[area]/[controller]")]
+    [Area("Account")]
     public class RoleController : ControllerBase
     {
         private readonly RoleManager<IdentityRole> _roleManager;

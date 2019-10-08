@@ -18,6 +18,7 @@ namespace OnlineStore.Areas.Items.Controllers
     [Route("api/[area]/[controller]")]
     [ApiController]
     [Authorize]
+    [Area("Items")]
     public class OrderController : ControllerBase
     {
         private readonly DatabaseContext _context;

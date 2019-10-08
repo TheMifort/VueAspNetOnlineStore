@@ -14,6 +14,7 @@ using OnlineStore.Models.Database;
 namespace OnlineStore.Areas.Admin.Controllers
 {
     [Route("api/[area]/[controller]")]
+    [Area("Account")]
     [ApiController]
     public class UserController : ControllerBase
     {
