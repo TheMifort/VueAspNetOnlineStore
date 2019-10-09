@@ -13,6 +13,7 @@ namespace OnlineStore.Database
         public DbSet<Order> Orders { get; set; }
         public DbSet<OrderItem> OrderItems { get; set; }
         public DbSet<Item> Items { get; set; }
+        public DbSet<RefreshToken> RefreshTokens { get; set; }
 
         public DatabaseContext(DbContextOptions<DatabaseContext> options)
             : base(options)
