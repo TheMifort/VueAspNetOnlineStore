@@ -8,6 +8,7 @@ using OnlineStore.Abstract;
 using OnlineStore.Areas.Account.Models.Request.Auth;
 using OnlineStore.Areas.Account.Models.Response.Auth;
 using OnlineStore.Database;
+using OnlineStore.Helpers;
 using OnlineStore.Models;
 using OnlineStore.Models.Database;
 using OnlineStore.Workers;
@@ -53,7 +54,7 @@ namespace OnlineStore.Areas.Account.Controllers
                 {
                     var refreshToken = _identityWorker.GenerateRefreshToken();
                     var expiresAt = DateTime.Now.ToUniversalTime().Add(new TimeSpan(days: 30, 0, 0, 0));
-                    var role = User.IsInRole("Admin") ? "Admin" : (User.IsInRole("Manager") ? "Manager" : "User");
+                    var role = User.GetUserRole();
                     var response = new AuthUserResponseModel
                     {
                         AccessToken = _identityWorker.GenerateJwtToken(identity),
