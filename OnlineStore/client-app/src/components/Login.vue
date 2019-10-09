@@ -23,8 +23,8 @@
         },
         data: function () {
             return {
-                username: "123",
-                password: ""
+                username: "Admin",
+                password: "+"
             };
         },
         methods: {

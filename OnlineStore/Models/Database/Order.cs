@@ -15,7 +15,7 @@ namespace OnlineStore.Models.Database
         public Guid CustomerId { get; set; }
 
         [Required] [ForeignKey("CustomerId")]
-        public Customer Customer { get; set; }
+        public virtual Customer Customer { get; set; }
 
         [Required]
         [Column("ORDER_DATE", TypeName = "date")]

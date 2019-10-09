@@ -16,7 +16,7 @@ namespace OnlineStore.Models.Database
 
         [Required]
         [ForeignKey("OrderId")]
-        public Order Order { get; set; }
+        public virtual Order Order { get; set; }
 
         [Required]
         [Column("ITEM_ID")]

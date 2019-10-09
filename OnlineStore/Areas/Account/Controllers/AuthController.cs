@@ -54,7 +54,10 @@ namespace OnlineStore.Areas.Account.Controllers
                 {
                     var refreshToken = _identityWorker.GenerateRefreshToken();
                     var expiresAt = DateTime.Now.ToUniversalTime().Add(new TimeSpan(days: 30, 0, 0, 0));
-                    var role = User.GetUserRole();
+
+                    var user = refreshTokenEntry.User;
+
+                    var role = (await _userManager.GetRolesAsync(user)).GetRole();
                     var response = new AuthUserResponseModel
                     {
                         AccessToken = _identityWorker.GenerateJwtToken(identity),
@@ -69,7 +72,7 @@ namespace OnlineStore.Areas.Account.Controllers
                     await _databaseContext.SaveChangesAsync();
 
                     var json = JsonConvert.SerializeObject(response,
-                        new JsonSerializerSettings { Formatting = Formatting.Indented });
+                        new JsonSerializerSettings {Formatting = Formatting.Indented});
                     return new OkObjectResult(json);
                 }
             }
@@ -93,7 +96,11 @@ namespace OnlineStore.Areas.Account.Controllers
                 {
                     var refreshToken = _identityWorker.GenerateRefreshToken();
                     var expiresAt = DateTime.Now.ToUniversalTime().Add(new TimeSpan(days: 30, 0, 0, 0));
-                    var role = User.IsInRole("Admin") ? "Admin" : (User.IsInRole("Manager") ? "Manager" : "User");
+
+                    var user = await _userManager.Users.FirstOrDefaultAsync(e => e.UserName == model.UserName);
+
+                    var role = (await _userManager.GetRolesAsync(user)).GetRole();
+
                     var response = new AuthUserResponseModel
                     {
                         AccessToken = _identityWorker.GenerateJwtToken(identity),
@@ -102,7 +109,7 @@ namespace OnlineStore.Areas.Account.Controllers
                         ExpiresAt = expiresAt,
                         Role = role
                     };
-                    var user = await _userManager.GetUserAsync(User);
+
                     user.RefreshTokens.Add(new RefreshToken
                     {
                         Token = refreshToken,
@@ -111,7 +118,7 @@ namespace OnlineStore.Areas.Account.Controllers
                     await _databaseContext.SaveChangesAsync();
 
                     var json = JsonConvert.SerializeObject(response,
-                        new JsonSerializerSettings { Formatting = Formatting.Indented });
+                        new JsonSerializerSettings {Formatting = Formatting.Indented});
                     return new OkObjectResult(json);
                 }
             }

@@ -1,13 +1,15 @@
 ﻿const axios = require('axios');
 
 const state = {
+    token: localStorage.getItem("token") || "",
+    refreshToken: localStorage.getItem("refreshToken") || "",
+    username: localStorage.getItem("username") || "",
     role: localStorage.getItem("role") || "",
-    status: "",
-    isAuthenticated: localStorage.getItem("isAuthenticated") || false
+    status: ""
 };
 
 const getters = {
-    isAuthenticated: state => state.isAuthenticated,
+    isAuthenticated: state => !!state.token,
     authStatus: state => state.status
 };
 
@@ -17,16 +19,22 @@ const actions = {
             commit("AUTH_REQUEST");
 
             axios
-                .post('api/Account/Login', { "username": user.username, "password": user.password })
+                .post('api/Account/Auth/Login', { "username": user.username, "password": user.password })
                 .then(resp => {
-                    localStorage.setItem("role", resp.role);
+                    localStorage.setItem("role", resp.data.Role);
+                    localStorage.setItem("token", resp.data.AccessToken);
+                    localStorage.setItem("username", resp.data.Name);
+                    localStorage.setItem("refreshToken", resp.data.RefreshToken);
+                    axios.defaults.headers.common['Authorization'] = "Bearer " + resp.data.AccessToken;
                     commit("AUTH_SUCCESS", resp);
                     //dispatch("USER_REQUEST");
                     resolve(resp);
                 }).catch(err => {
                     commit("AUTH_ERROR", err);
-                    localStorage.removeItem("isAuthenticated");
+                    localStorage.removeItem("token");
                     localStorage.removeItem("role");
+                    localStorage.removeItem("refreshToken");
+                    localStorage.removeItem("username");
                     reject(err);
                 });
         });
@@ -37,8 +45,11 @@ const actions = {
                 .post('api/Account/LogOff')
                 .then(resp => {
                     commit("AUTH_LOGOUT");
-                    localStorage.removeItem("isAuthenticated");
+                    localStorage.removeItem("token");
+                    localStorage.removeItem("username");
                     localStorage.removeItem("role");
+                    localStorage.removeItem("refreshToken");
+                    localStorage.removeItem("username");
                     resolve(resp);
                 });
         });
@@ -51,15 +62,12 @@ const mutations = {
     },
     AUTH_SUCCESS: (state, resp) => {
         state.status = "success";
-        state.isAuthenticated = true;
-        state.role = resp.role;
     },
     AUTH_ERROR: (state) => {
         state.status = "error";
     },
     AUTH_LOGOUT: (state) => {
         state.role = "";
-        state.isAuthenticated = false;
     }
 };
 

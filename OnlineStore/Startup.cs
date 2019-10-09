@@ -69,7 +69,7 @@ namespace OnlineStore
             services.AddTransient<SeedContext>();
 
             services.AddDbContext<DatabaseContext>(options =>
-                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+                options.UseLazyLoadingProxies().UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
             services.AddIdentity<User, IdentityRole>()
                 .AddEntityFrameworkStores<DatabaseContext>().AddDefaultTokenProviders();
@@ -93,8 +93,8 @@ namespace OnlineStore
 
             app.UseRouting();
 
-            app.UseAuthorization();
-            
+            app.UseAuthentication();
+
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
