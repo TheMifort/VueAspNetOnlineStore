@@ -11,6 +11,7 @@
                 <a href="">Забыли пароль?</a><a href="">Регистрация</a>
             </fieldset>
         </form>
+        <button @click="logoff" value="Выход"/>
     </div>
 </template>
 
@@ -30,6 +31,11 @@
             login: function () {
                 const { username, password } = this;
                 this.$store.dispatch("AUTH_REQUEST", { username, password }).then(() => {
+                    alert();
+                });
+            },
+            logoff: function () {
+                this.$store.dispatch("AUTH_LOGOUT").then(() => {
                     alert();
                 });
             }

@@ -2,7 +2,10 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Microsoft.EntityFrameworkCore;
 using OnlineStore.Areas.Account.Models.Request.Account;
+using OnlineStore.Areas.Account.Models.Response.Account;
 using OnlineStore.Models.Database;
 
 namespace OnlineStore.Areas.Account.Controllers
@@ -13,7 +16,6 @@ namespace OnlineStore.Areas.Account.Controllers
     public class AccountController : ControllerBase
     {
         private readonly SignInManager<User> _signInManager;
-
         public AccountController(SignInManager<User> signInManager)
         {
             _signInManager = signInManager;
@@ -29,7 +31,19 @@ namespace OnlineStore.Areas.Account.Controllers
                     await _signInManager.PasswordSignInAsync(model.UserName, model.Password, true, false);
                 if (result.Succeeded)
                 {
-                    return Ok();
+                    var user = await _signInManager.UserManager.Users.FirstOrDefaultAsync(e => e.UserName == model.UserName);
+                    var roles = await _signInManager.UserManager.GetRolesAsync(user);
+                    var response = new LoginResponseModel();
+
+                    if (roles.Contains("Admin"))
+                        response.Role = "Admin";
+                    else if (roles.Contains("Manager"))
+                        response.Role = "Manager";
+                    else if (roles.Contains("User"))
+                        response.Role = "User";
+
+
+                    return Ok(response);
                 }
                 else
                 {
@@ -40,7 +54,7 @@ namespace OnlineStore.Areas.Account.Controllers
             return BadRequest();
         }
 
-        [HttpGet]
+        [HttpPost("[action]")]
         [Authorize]
         public async Task<IActionResult> LogOff()
         {

@@ -34,7 +34,7 @@ const actions = {
     AUTH_LOGOUT: ({ commit }) => {
         return new Promise((resolve) => {
             axios
-                .get('api/Account/LogOff')
+                .post('api/Account/LogOff')
                 .then(resp => {
                     commit("AUTH_LOGOUT");
                     localStorage.removeItem("isAuthenticated");
