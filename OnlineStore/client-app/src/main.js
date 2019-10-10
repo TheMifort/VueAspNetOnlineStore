@@ -17,6 +17,22 @@ const token = localStorage.getItem('token');
 if (token) {
     axios.defaults.headers.common['Authorization'] = "Bearer " + token;
 }
+
+axios.interceptors.response.use((response) => {
+    return response;
+}, function (error) {
+    const originalRequest = error.config;
+
+    if (error.response.status === 401 && !originalRequest._retry) {
+        originalRequest._retry = true;
+        let ret = store.dispatch("AUTH_REFRESH").then(() => {
+            return axios(originalRequest);
+        });
+        return ret;
+    }
+    return Promise.reject(error);
+});
+
 new Vue({
     store,
     router,

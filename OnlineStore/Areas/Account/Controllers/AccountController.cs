@@ -26,59 +26,50 @@ namespace OnlineStore.Areas.Account.Controllers
         }
 
         [HttpPost("[action]")]
-        public async Task<IActionResult> SignOut([FromBody] SignOutRequestModel request)
+        public async Task<IActionResult> SignOut()
         {
-            if (!string.IsNullOrEmpty(request?.RefreshToken))
+            var user = await _userManager.Users.FirstOrDefaultAsync(e => e.UserName == User.Identity.Name);
+            var claim = User.FindFirst("App.Identity.Id");
+            var refreshTokenEntry =
+                user.RefreshTokens.FirstOrDefault(e =>
+                    e.Token == claim.Value && e.ExpiresAt > DateTime.Now.ToUniversalTime());
+
+            if (refreshTokenEntry == null)
             {
-                var user = await _userManager.Users.FirstOrDefaultAsync(e => e.UserName == User.Identity.Name);
-
-                var refreshTokenEntry =
-                    user.RefreshTokens.FirstOrDefault(e =>
-                        e.Token == request.RefreshToken);
-
-                if (refreshTokenEntry == null)
-                {
-                    ModelState.TryAddModelError("RefreshToken.Invalid", "RefreshToken неверен");
-                    return BadRequest(ModelState);
-                }
-
-                user.RefreshTokens.Remove(refreshTokenEntry);
-
-                await _databaseContext.SaveChangesAsync();
-
-                return new OkResult();
+                ModelState.TryAddModelError("RefreshToken.Invalid", "RefreshToken неверен");
+                return BadRequest(ModelState);
             }
 
-            ModelState.TryAddModelError("RefreshToken.Invalid", "RefreshToken неверен");
-            return BadRequest(ModelState);
+            user.RefreshTokens.Remove(refreshTokenEntry);
+
+            await _databaseContext.SaveChangesAsync();
+
+            return new OkResult();
         }
 
         [HttpPost("[action]")]
         public async Task<IActionResult> SignOutAll([FromBody] SignOutAllRequestModel request)
         {
-            if (!string.IsNullOrEmpty(request?.RefreshToken))
+            var user = await _userManager.Users.FirstOrDefaultAsync(e => e.UserName == User.Identity.Name);
+
+            var claim = User.FindFirst("App.Identity.Id");
+
+            var refreshTokenEntry =
+                user.RefreshTokens.FirstOrDefault(e =>
+                    e.Token == claim.Value && e.ExpiresAt > DateTime.Now.ToUniversalTime());
+
+            if (refreshTokenEntry == null)
             {
-                var user = await _userManager.Users.FirstOrDefaultAsync(e => e.UserName == User.Identity.Name);
-
-                var refreshTokenEntry =
-                    user.RefreshTokens.FirstOrDefault(e =>
-                        e.Token == request.RefreshToken && e.ExpiresAt > DateTime.Now.ToUniversalTime());
-
-                if (refreshTokenEntry == null)
-                {
-                    ModelState.TryAddModelError("RefreshToken.Invalid", "RefreshToken неверен");
-                    return BadRequest(ModelState);
-                }
-
-                user.RefreshTokens.RemoveAll(e => request.SaveCurrentLogin == false || e.Id != refreshTokenEntry.Id);
-
-                await _databaseContext.SaveChangesAsync();
-
-                return new OkResult();
+                ModelState.TryAddModelError("RefreshToken.Invalid", "RefreshToken неверен");
+                return BadRequest(ModelState);
             }
 
-            ModelState.TryAddModelError("RefreshToken.Invalid", "RefreshToken неверен");
-            return BadRequest(ModelState);
+            user.RefreshTokens.RemoveAll(e => request.SaveCurrentLogin == false || e.Id != refreshTokenEntry.Id);
+
+            await _databaseContext.SaveChangesAsync();
+
+            return new OkResult();
+
         }
     }
 }

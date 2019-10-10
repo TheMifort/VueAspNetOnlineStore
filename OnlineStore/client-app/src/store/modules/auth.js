@@ -27,7 +27,30 @@ const actions = {
                     localStorage.setItem("refreshToken", resp.data.RefreshToken);
                     axios.defaults.headers.common['Authorization'] = "Bearer " + resp.data.AccessToken;
                     commit("AUTH_SUCCESS", resp);
-                    //dispatch("USER_REQUEST");
+                    resolve(resp);
+                }).catch(err => {
+                    commit("AUTH_ERROR", err);
+                    localStorage.removeItem("token");
+                    localStorage.removeItem("role");
+                    localStorage.removeItem("refreshToken");
+                    localStorage.removeItem("username");
+                    reject(err);
+                });
+        });
+    },
+    AUTH_REFRESH: ({ commit }) => {
+        return new Promise((resolve, reject) => {
+            commit("AUTH_REQUEST");
+
+            axios
+                .post('api/Account/Auth/Token', { "refreshToken": localStorage.getItem("refreshToken") })
+                .then(resp => {
+                    localStorage.setItem("role", resp.data.Role);
+                    localStorage.setItem("token", resp.data.AccessToken);
+                    localStorage.setItem("username", resp.data.Name);
+                    localStorage.setItem("refreshToken", resp.data.RefreshToken);
+                    axios.defaults.headers.common['Authorization'] = "Bearer " + resp.data.AccessToken;
+                    commit("AUTH_SUCCESS", resp);
                     resolve(resp);
                 }).catch(err => {
                     commit("AUTH_ERROR", err);
@@ -42,15 +65,17 @@ const actions = {
     AUTH_LOGOUT: ({ commit }) => {
         return new Promise((resolve) => {
             axios
-                .post('api/Account/signout', { "refreshToken": localStorage.getItem("refreshToken") })
+                .post('api/Account/SignOut')
                 .then(resp => {
                     commit("AUTH_LOGOUT");
                     localStorage.removeItem("token");
                     localStorage.removeItem("username");
                     localStorage.removeItem("role");
                     localStorage.removeItem("refreshToken");
-                    localStorage.removeItem("username");
                     resolve(resp);
+                })
+                .catch(err => {
+                    alert(err);
                 });
         });
     }

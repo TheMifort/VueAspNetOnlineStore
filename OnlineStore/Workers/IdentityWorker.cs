@@ -9,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using OnlineStore.Abstract;
 using OnlineStore.Database;
+using OnlineStore.Helpers;
 using OnlineStore.Models;
 using OnlineStore.Models.Database;
 
@@ -94,7 +95,7 @@ namespace OnlineStore.Workers
             var claims = new List<Claim>
             {
                 new Claim(ClaimsIdentity.DefaultNameClaimType, user.UserName),
-                new Claim(ClaimsIdentity.DefaultRoleClaimType, roles.Count > 0 ? roles[0] : "")
+                new Claim(ClaimsIdentity.DefaultRoleClaimType, roles.GetRole())
             };
 
             return await Task.FromResult(new ClaimsIdentity(claims, "Token", ClaimsIdentity.DefaultNameClaimType,

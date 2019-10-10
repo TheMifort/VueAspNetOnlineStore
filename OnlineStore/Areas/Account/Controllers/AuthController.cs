@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -56,6 +57,7 @@ namespace OnlineStore.Areas.Account.Controllers
                     var expiresAt = DateTime.Now.ToUniversalTime().Add(new TimeSpan(days: 30, 0, 0, 0));
 
                     var user = refreshTokenEntry.User;
+                    identity.AddClaim(new Claim("App.Identity.Id", refreshToken));
 
                     var role = (await _userManager.GetRolesAsync(user)).GetRole();
                     var response = new AuthUserResponseModel
@@ -72,7 +74,7 @@ namespace OnlineStore.Areas.Account.Controllers
                     await _databaseContext.SaveChangesAsync();
 
                     var json = JsonConvert.SerializeObject(response,
-                        new JsonSerializerSettings {Formatting = Formatting.Indented});
+                        new JsonSerializerSettings { Formatting = Formatting.Indented });
                     return new OkObjectResult(json);
                 }
             }
@@ -96,6 +98,7 @@ namespace OnlineStore.Areas.Account.Controllers
                 {
                     var refreshToken = _identityWorker.GenerateRefreshToken();
                     var expiresAt = DateTime.Now.ToUniversalTime().Add(new TimeSpan(days: 30, 0, 0, 0));
+                    identity.AddClaim(new Claim("App.Identity.Id", refreshToken));
 
                     var user = await _userManager.Users.FirstOrDefaultAsync(e => e.UserName == model.UserName);
 
@@ -118,7 +121,7 @@ namespace OnlineStore.Areas.Account.Controllers
                     await _databaseContext.SaveChangesAsync();
 
                     var json = JsonConvert.SerializeObject(response,
-                        new JsonSerializerSettings {Formatting = Formatting.Indented});
+                        new JsonSerializerSettings { Formatting = Formatting.Indented });
                     return new OkObjectResult(json);
                 }
             }
