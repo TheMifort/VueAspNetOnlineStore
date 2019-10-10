@@ -1,5 +1,6 @@
 <template>
     <div id="app">
+        <Navbar/>
         <div class="main-container">
             <router-view />
         </div>
@@ -9,9 +10,11 @@
 <script>
     import HelloWorld from './components/HelloWorld.vue'
     import Login from "./components/Login.vue"
+    import Navbar from "./components/Navbar.vue"
     export default {
         name: 'app',
         components: {
+            Navbar,
             HelloWorld,
             Login
         }
@@ -26,6 +29,5 @@
         -moz-osx-font-smoothing: grayscale;
         text-align: center;
         color: #2c3e50;
-        margin-top: 60px;
     }
 </style>
