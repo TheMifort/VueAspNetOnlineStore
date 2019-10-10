@@ -2,6 +2,7 @@ import Vue from 'vue'
 import App from './App.vue'
 import store from './store/store.js'
 import axios from 'axios'
+import router from './router/router.js'
 
 Vue.config.productionTip = false;
 
@@ -11,5 +12,6 @@ if (token) {
 }
 new Vue({
     store,
+    router,
     render: h => h(App),
 }).$mount('#app');
