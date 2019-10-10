@@ -11,12 +11,14 @@
     import HelloWorld from './components/HelloWorld.vue'
     import Login from "./components/Login.vue"
     import Navbar from "./components/Navbar.vue"
+    import Users from "./components/Users.vue"
     export default {
         name: 'app',
         components: {
             Navbar,
             HelloWorld,
-            Login
+            Login,
+            Users
         }
     }
 </script>
