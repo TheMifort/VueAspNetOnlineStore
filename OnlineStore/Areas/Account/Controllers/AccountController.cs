@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using OnlineStore.Areas.Account.Models.Request.Account;
 using OnlineStore.Database;
 using OnlineStore.Models.Database;
@@ -24,12 +25,12 @@ namespace OnlineStore.Areas.Account.Controllers
             _userManager = userManager;
         }
 
-        [HttpPost("signout")]
+        [HttpPost("[action]")]
         public async Task<IActionResult> SignOut([FromBody] SignOutRequestModel request)
         {
             if (!string.IsNullOrEmpty(request?.RefreshToken))
             {
-                var user = await _userManager.GetUserAsync(User);
+                var user = await _userManager.Users.FirstOrDefaultAsync(e => e.UserName == User.Identity.Name);
 
                 var refreshTokenEntry =
                     user.RefreshTokens.FirstOrDefault(e =>
@@ -52,12 +53,12 @@ namespace OnlineStore.Areas.Account.Controllers
             return BadRequest(ModelState);
         }
 
-        [HttpPost("signoutall")]
+        [HttpPost("[action]")]
         public async Task<IActionResult> SignOutAll([FromBody] SignOutAllRequestModel request)
         {
             if (!string.IsNullOrEmpty(request?.RefreshToken))
             {
-                var user = await _userManager.GetUserAsync(User);
+                var user = await _userManager.Users.FirstOrDefaultAsync(e => e.UserName == User.Identity.Name);
 
                 var refreshTokenEntry =
                     user.RefreshTokens.FirstOrDefault(e =>

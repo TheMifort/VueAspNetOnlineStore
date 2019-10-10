@@ -42,7 +42,7 @@ const actions = {
     AUTH_LOGOUT: ({ commit }) => {
         return new Promise((resolve) => {
             axios
-                .post('api/Account/LogOff')
+                .post('api/Account/signout', { "refreshToken": localStorage.getItem("refreshToken") })
                 .then(resp => {
                     commit("AUTH_LOGOUT");
                     localStorage.removeItem("token");
