@@ -99,12 +99,12 @@
             },
             roles: {
                 get() {
-                    return this.$store.getters.roles;
+                    return this.$store.getters.allRoles;
                 }
             },
             customers: {
                 get() {
-                    return this.$store.getters.customers;
+                    return this.$store.getters.allCustomers;
                 }
             },
         },

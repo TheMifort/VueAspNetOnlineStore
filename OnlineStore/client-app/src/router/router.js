@@ -5,6 +5,7 @@ import store from '../store/store.js'
 import Login from '../components/Login.vue'
 import HelloWorld from '../components/HelloWorld.vue'
 import Users from '../components/Users.vue'
+import Customers from '../components/Customers.vue'
 
 Vue.use(Router)
 
@@ -48,6 +49,12 @@ export default new Router({
             path: '/users',
             name: 'Users',
             component: Users,
+            //beforeEnter: ifNotAuthenticated,
+        },
+        {
+            path: '/customers',
+            name: 'Customers',
+            component: Customers,
             //beforeEnter: ifNotAuthenticated,
         },
     ],

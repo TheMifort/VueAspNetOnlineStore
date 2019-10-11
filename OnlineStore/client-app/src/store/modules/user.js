@@ -9,8 +9,8 @@ const state = {
 
 const getters = {
     users: state => state.users,
-    roles: state => state.allRoles,
-    customers: state => state.allCustomers
+    allRoles: state => state.allRoles,
+    allCustomers: state => state.allCustomers
 };
 
 const actions = {

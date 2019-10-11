@@ -12,13 +12,15 @@
     import Login from "./components/Login.vue"
     import Navbar from "./components/Navbar.vue"
     import Users from "./components/Users.vue"
+    import Customers from "./components/Customers.vue"
     export default {
         name: 'app',
         components: {
             Navbar,
             HelloWorld,
             Login,
-            Users
+            Users,
+            Customers
         }
     }
 </script>

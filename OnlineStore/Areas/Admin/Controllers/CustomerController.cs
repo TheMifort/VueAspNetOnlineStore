@@ -44,7 +44,7 @@ namespace OnlineStore.Areas.Admin.Controllers
         }
 
         // PUT: api/Items/5
-        [HttpPut("{id}")]
+        [HttpPut("{id:guid}")]
         public async Task<IActionResult> Put(Guid id, [FromBody] CustomerRequestModel value)
         {
             if (ModelState.IsValid)
