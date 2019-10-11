@@ -5,7 +5,6 @@ namespace OnlineStore.Areas.Admin.Models.Request.Customer
 {
     public class CustomerRequestModel
     {
-        [Required]
         public Guid Id { get; set; }
 
         [Required]

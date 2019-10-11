@@ -71,7 +71,13 @@ namespace OnlineStore
             services.AddDbContext<DatabaseContext>(options =>
                 options.UseLazyLoadingProxies().UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
-            services.AddIdentity<User, IdentityRole>()
+            services.AddIdentity<User, IdentityRole>(options => {
+                    options.Password.RequireDigit = false;
+                    options.Password.RequiredLength = 4;
+                    options.Password.RequireNonAlphanumeric = false;
+                    options.Password.RequireUppercase = false;
+                    options.Password.RequireLowercase = false;
+                })
                 .AddEntityFrameworkStores<DatabaseContext>().AddDefaultTokenProviders();
 
             services.AddAutoMapper(configAction: cfg =>

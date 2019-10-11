@@ -10,8 +10,5 @@ namespace OnlineStore.Areas.Admin.Models.Response.User
 
         public List<string> Roles { get; set; }
         public CustomerResponseModel Customer { get; set; }
-
-        public List<string> AllRoles { get; set; }
-        public List<CustomerResponseModel> AllCustomers { get; set; }
     }
 }

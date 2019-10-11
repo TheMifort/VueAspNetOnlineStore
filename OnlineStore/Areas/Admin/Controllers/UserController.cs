@@ -32,27 +32,28 @@ namespace OnlineStore.Areas.Admin.Controllers
             _roleManager = roleManager;
         }
 
-        public async Task<IEnumerable<UserResponseModel>> Get()
+        public async Task<UsersResponseModel> Get()
         {
-            var result = new List<UserResponseModel>();
+            var resultUsers = new List<UserResponseModel>();
             foreach (var user in _userManager.Users)
             {
                 var roles = await _userManager.GetRolesAsync(user);
-                result.Add(new UserResponseModel
+                resultUsers.Add(new UserResponseModel
                 {
                     Id = user.Id,
                     UserName = user.UserName,
                     Roles = roles.ToList(),
-                    Customer = _mapper.Map<Customer, CustomerResponseModel>(user.Customer),
-
-                    AllRoles = _roleManager.Roles.Select(e => e.Name).ToList(),
-                    AllCustomers =
-                        _mapper.Map<List<Customer>, List<CustomerResponseModel>>(_databaseContext.Customers
-                            .ToList()) //TODO IEnumerable?
+                    Customer = _mapper.Map<Customer, CustomerResponseModel>(user.Customer)
                 });
             }
 
-            await Task.Delay(500);//Busy test
+            var result = new UsersResponseModel
+            {
+                Users = resultUsers,
+                AllRoles = _roleManager.Roles.Select(e => e.Name),
+                AllCustomers =
+                    _mapper.Map<IEnumerable<Customer>, IEnumerable<CustomerResponseModel>>(_databaseContext.Customers)
+            };
             return result;
         }
 
@@ -88,10 +89,22 @@ namespace OnlineStore.Areas.Admin.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> Put(string id, [FromBody] UserRequestModel model)
         {
-            if (ModelState.IsValid)
+            if (ModelState.IsValid && !string.IsNullOrEmpty(id))
             {
                 var user = await _userManager.FindByIdAsync(id);
-                user.Customer = await _databaseContext.Customers.FirstOrDefaultAsync(e => e.Id == model.Customer.Id);
+                if (user == null)
+                    return BadRequest();
+
+                if (model.CustomerId != null)
+                {
+                    var customer = await _databaseContext.Customers.FirstOrDefaultAsync(e => e.Id == model.CustomerId);
+                    if (customer != null)
+                        user.Customer = customer;
+                }
+                else
+                {
+                    user.Customer = null;
+                }
 
                 var userRoles = await _userManager.GetRolesAsync(user);
                 var addedRoles = model.Roles.Except(userRoles).ToList();
@@ -100,6 +113,13 @@ namespace OnlineStore.Areas.Admin.Controllers
                 await _userManager.AddToRolesAsync(user, addedRoles);
 
                 await _userManager.RemoveFromRolesAsync(user, removedRoles);
+
+                if (!string.IsNullOrEmpty(model.Password))
+                {
+                    var passwordRemove = await _userManager.RemovePasswordAsync(user);
+                    if (passwordRemove.Succeeded)
+                        await _userManager.AddPasswordAsync(user, model.Password);
+                }
 
                 await _databaseContext.SaveChangesAsync();
                 return Ok();
