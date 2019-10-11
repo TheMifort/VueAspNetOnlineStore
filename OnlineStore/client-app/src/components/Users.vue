@@ -18,7 +18,7 @@
         </b-table>
 
         <b-button v-b-modal.modal-user-add>Add user</b-button>
-        <b-modal ref="modal-user-add" id="modal-user-add" title="Create new user" @ok="okAdd">
+        <b-modal ref="modal-user-add" id="modal-user-add" title="Create new user" @ok="okAdd" @cancel="cancelAdd">
             <b-form-group id="fieldset-1"
                           label="UserName"
                           label-for="input-userName">
@@ -33,7 +33,7 @@
             
         </b-modal>
 
-        <b-modal ref="modal-user" id="modal-user" :title="user.userName" @ok="ok">
+        <b-modal ref="modal-user" id="modal-user" :title="user.userName" @ok="ok" @cancel="cancel">
             <b-form-group label="Roles:">
                 <b-form-checkbox-group id="checkbox-group-2" v-model="user.roles" name="flavour-2">
                     <b-form-checkbox v-for="role in roles"
@@ -138,6 +138,22 @@
             async okAdd() {
                 await this.$store.dispatch('USER_CREATE', this.newUser);
                 await this.fetchData();
+                this.newUser = {
+                    id: {},
+                    userName: "",
+                    roles: {},
+                    customer: {}
+                }
+            },
+            cancel() {
+                this.user = {
+                    id: {},
+                    userName: "",
+                    roles: {},
+                    customer: {}
+                }
+            },
+            cancelAdd() {
                 this.newUser = {
                     id: {},
                     userName: "",
