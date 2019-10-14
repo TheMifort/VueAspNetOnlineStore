@@ -13,6 +13,8 @@
     import Navbar from "./components/Navbar.vue"
     import Users from "./components/Users.vue"
     import Customers from "./components/Customers.vue"
+    import Items from "./components/Customers.vue"
+
     export default {
         name: 'app',
         components: {
@@ -20,7 +22,8 @@
             HelloWorld,
             Login,
             Users,
-            Customers
+            Customers,
+            Items
         }
     }
 </script>

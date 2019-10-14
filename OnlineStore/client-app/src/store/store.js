@@ -4,6 +4,7 @@ import Vuex from 'vuex'
 import auth from './modules/auth'
 import user from './modules/user'
 import customer from './modules/customer'
+import item from './modules/item'
 
 Vue.use(Vuex);
 
@@ -13,7 +14,8 @@ export default new Vuex.Store({
     modules: {
         user,
         auth,
-        customer
+        customer,
+        item
     },
     strict: debug,
 })

@@ -13,7 +13,7 @@ namespace OnlineStore.Areas.Items.Models.Request.Items
         [Required]
         public string Name { get; set; }
 
-        public int Price { get; set; }
+        public decimal Price { get; set; }
 
         public string Category { get; set; }
     }

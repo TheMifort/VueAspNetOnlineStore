@@ -6,8 +6,9 @@ import Login from '../components/Login.vue'
 import HelloWorld from '../components/HelloWorld.vue'
 import Users from '../components/Users.vue'
 import Customers from '../components/Customers.vue'
+import Items from '../components/Items.vue'
 
-Vue.use(Router)
+Vue.use(Router);
 
 const ifNotAuthenticated = (to, from, next) => {
     if (!store.getters.isAuthenticated) {
@@ -55,6 +56,12 @@ export default new Router({
             path: '/customers',
             name: 'Customers',
             component: Customers,
+            //beforeEnter: ifNotAuthenticated,
+        },
+        {
+            path: '/items',
+            name: 'Items',
+            component: Items,
             //beforeEnter: ifNotAuthenticated,
         },
     ],
