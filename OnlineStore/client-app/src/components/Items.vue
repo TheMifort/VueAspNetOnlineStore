@@ -1,75 +1,106 @@
 ﻿<template>
-    <div>
-        <b-table selectable
-                 select-mode="single"
-                 selected-variant="primary"
-                 striped hover
-                 :items="items"
-                 :fields="fields"
-                 :busy="isBusy"
-                 @row-selected="onRowSelected"
-                 @row-dblclicked="onRowDoubleClicked">
-            <template v-slot:table-busy>
-                <div class="text-center text-danger my-2">
-                    <b-spinner class="align-middle"></b-spinner>
-                    <strong>Loading...</strong>
-                </div>
-            </template>
-        </b-table>
-
-        <b-button v-b-modal.modal-item-add>Add item</b-button>
-        <b-modal ref="modal-item-add" id="modal-item-add" title="Create new item" @ok="okAdd" @cancel="cancelAdd">
+    <div class="container-fluid row">
+        <div class="col-3" style="background: #00ffff">
+            <h2>Filters</h2>
             <b-form-group id="fieldset-1"
                           label="Name"
-                          label-for="input-new-itemName">
-                <b-form-input id="input-new-itemName" v-model="newItem.name" trim />
+                          label-for="input-filter-name">
+                <b-form-input id="input-filter-name" v-model="filter.name" @input="filterItems" trim />
             </b-form-group>
-
             <b-form-group id="fieldset-1"
                           label="Code"
-                          label-for="input-new-code">
-                <b-form-input id="input-new-code" v-model="newItem.code" trim />
+                          label-for="input-filter-code">
+                <b-form-input id="input-filter-code" v-model="filter.code" @input="filterItems" trim />
             </b-form-group>
-
-            <b-form-group id="fieldset-1"
-                          label="Price"
-                          label-for="input-new-price">
-                <b-form-input id="input-new-price" type="number" v-model.number="newItem.price" trim />
-            </b-form-group>
-
             <b-form-group id="fieldset-1"
                           label="Category"
-                          label-for="input-new-category">
-                <b-form-input id="input-new-category" v-model="newItem.category" trim />
+                          label-for="input-filter-category">
+                <b-form-input id="input-filter-category" v-model="filter.category" @input="filterItems" trim />
             </b-form-group>
-
-        </b-modal>
-
-        <b-modal ref="modal-item" id="modal-user" title="item.id" @ok="ok" @cancel="cancel">
             <b-form-group id="fieldset-1"
-                          label="Name"
-                          label-for="input-itemName">
-                <b-form-input id="input-itemName" v-model="item.name" trim />
+                          label="Price from"
+                          label-for="input-filter-priceFrom">
+                <b-form-input id="input-filter-priceFrom" type="number" v-model.number="filter.priceFrom" @input="filterItems" trim />
             </b-form-group>
-
             <b-form-group id="fieldset-1"
-                          label="Code"
-                          label-for="input-code">
-                <b-form-input id="input-code" v-model="item.code" trim />
+                          label="Price to"
+                          label-for="input-filter-priceTo">
+                <b-form-input id="input-filter-priceTo" type="number" v-model.number="filter.priceTo" @input="filterItems" trim />
             </b-form-group>
+        </div>
 
-            <b-form-group id="fieldset-1"
-                          label="Price"
-                          label-for="input-price">
-                <b-form-input id="input-price" type="number" v-model.number="item.price" trim />
-            </b-form-group>
+        <div class="col-9">
+            <b-table selectable
+                     select-mode="single"
+                     selected-variant="primary"
+                     striped hover
+                     :items="items"
+                     :fields="fields"
+                     :busy="isBusy"
+                     @row-selected="onRowSelected"
+                     @row-dblclicked="onRowDoubleClicked">
+                <template v-slot:table-busy>
+                    <div class="text-center text-danger my-2">
+                        <b-spinner class="align-middle"></b-spinner>
+                        <strong>Loading...</strong>
+                    </div>
+                </template>
+            </b-table>
 
-            <b-form-group id="fieldset-1"
-                          label="Catefory"
-                          label-for="input-category">
-                <b-form-input id="input-category" v-model="item.category" trim />
-            </b-form-group>
-        </b-modal>
+            <b-button v-if="true" v-b-modal.modal-item-add>Add item</b-button>
+            <b-modal ref="modal-item-add" id="modal-item-add" title="Create new item" @ok="okAdd" @cancel="cancelAdd">
+                <b-form-group id="fieldset-1"
+                              label="Name"
+                              label-for="input-new-itemName">
+                    <b-form-input id="input-new-itemName" v-model="newItem.name" trim />
+                </b-form-group>
+
+                <b-form-group id="fieldset-1"
+                              label="Code"
+                              label-for="input-new-code">
+                    <b-form-input id="input-new-code" v-model="newItem.code" trim />
+                </b-form-group>
+
+                <b-form-group id="fieldset-1"
+                              label="Price"
+                              label-for="input-new-price">
+                    <b-form-input id="input-new-price" type="number" v-model.number="newItem.price" trim />
+                </b-form-group>
+
+                <b-form-group id="fieldset-1"
+                              label="Category"
+                              label-for="input-new-category">
+                    <b-form-input id="input-new-category" v-model="newItem.category" trim />
+                </b-form-group>
+
+            </b-modal>
+
+            <b-modal ref="modal-item" id="modal-user" title="item.id" @ok="ok" @cancel="cancel">
+                <b-form-group id="fieldset-1"
+                              label="Name"
+                              label-for="input-itemName">
+                    <b-form-input id="input-itemName" v-model="item.name" trim />
+                </b-form-group>
+
+                <b-form-group id="fieldset-1"
+                              label="Code"
+                              label-for="input-code">
+                    <b-form-input id="input-code" v-model="item.code" trim />
+                </b-form-group>
+
+                <b-form-group id="fieldset-1"
+                              label="Price"
+                              label-for="input-price">
+                    <b-form-input id="input-price" type="number" v-model.number="item.price" trim />
+                </b-form-group>
+
+                <b-form-group id="fieldset-1"
+                              label="Catefory"
+                              label-for="input-category">
+                    <b-form-input id="input-category" v-model="item.category" trim />
+                </b-form-group>
+            </b-modal>
+        </div>
     </div>
 </template>
 
@@ -81,7 +112,8 @@
         data() {
             return {
                 isBusy: false,
-                fields: ['id', 'name', 'code', 'price','category'],
+                fields: ['id', 'name', 'code', 'price', 'category'],
+                items: [],
                 newItem: {
                     name: "",
                     code: "",
@@ -94,11 +126,18 @@
                     code: "",
                     price: "",
                     category: ""
+                },
+                filter: {
+                    name: "",
+                    code: "",
+                    priceFrom: "",
+                    priceTo: "",
+                    category: ""
                 }
             }
         },
         computed: {
-            items: {
+            allItems: {
                 get() {
                     return this.$store.getters.items;
                 }
@@ -146,12 +185,21 @@
                     price: "",
                     category: ""
                 }
+            },
+            filterItems() {
+                this.items = this.allItems.filter(e => e.name.startsWith(this.filter.name)
+                    && e.code.startsWith(this.filter.code)
+                    && e.category.startsWith(this.filter.category)
+                    && (this.filter.priceFrom <= 0 || e.price >= this.filter.priceFrom)
+                    && (this.filter.priceTo <= 0 || e.price <= this.filter.priceTo)
+                );
             }
         },
 
 
         created: async function () {
             await this.fetchData();
+            this.items = this.allItems;
         },
     }
 </script>
