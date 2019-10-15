@@ -39,6 +39,13 @@
                      :busy="isBusy"
                      @row-selected="onRowSelected"
                      @row-dblclicked="onRowDoubleClicked">
+
+                <template v-slot:cell(cart)="row">
+                    <b-button size="sm" @click="cart(row)" class="mr-2">
+                        <i class="fas fa-sm fa-cart-plus"></i>
+                    </b-button>
+                </template>
+
                 <template v-slot:table-busy>
                     <div class="text-center text-danger my-2">
                         <b-spinner class="align-middle"></b-spinner>
@@ -112,7 +119,7 @@
         data() {
             return {
                 isBusy: false,
-                fields: ['id', 'name', 'code', 'price', 'category'],
+                fields: ['name', 'code', 'price', 'category','cart'],
                 items: [],
                 newItem: {
                     name: "",
@@ -145,6 +152,9 @@
         },
 
         methods: {
+            cart(item) {
+                alert(JSON.stringify(item));
+            },
             onRowSelected(items) {
 
             },
