@@ -119,8 +119,8 @@
         data() {
             return {
                 isBusy: false,
-                fields: ['name', 'code', 'price', 'category','cart'],
-                items: [],
+                fields: ['name', 'code', 'price', 'category', 'cart'],
+                //items: [],
                 newItem: {
                     name: "",
                     code: "",
@@ -147,6 +147,16 @@
             allItems: {
                 get() {
                     return this.$store.getters.items;
+                }
+            },
+            items: {
+                get() {
+                    return this.allItems.filter(e => e.name.startsWith(this.filter.name)
+                        && e.code.startsWith(this.filter.code)
+                        && e.category.startsWith(this.filter.category)
+                        && (this.filter.priceFrom <= 0 || e.price >= this.filter.priceFrom)
+                        && (this.filter.priceTo <= 0 || e.price <= this.filter.priceTo)
+                    )
                 }
             }
         },
@@ -197,19 +207,18 @@
                 }
             },
             filterItems() {
-                this.items = this.allItems.filter(e => e.name.startsWith(this.filter.name)
-                    && e.code.startsWith(this.filter.code)
-                    && e.category.startsWith(this.filter.category)
-                    && (this.filter.priceFrom <= 0 || e.price >= this.filter.priceFrom)
-                    && (this.filter.priceTo <= 0 || e.price <= this.filter.priceTo)
-                );
+                //this.items = this.allItems.filter(e => e.name.startsWith(this.filter.name)
+                //    && e.code.startsWith(this.filter.code)
+                //    && e.category.startsWith(this.filter.category)
+                //    && (this.filter.priceFrom <= 0 || e.price >= this.filter.priceFrom)
+                //    && (this.filter.priceTo <= 0 || e.price <= this.filter.priceTo)
+                //);
             }
         },
 
 
         created: async function () {
             await this.fetchData();
-            this.items = this.allItems;
         },
     }
 </script>
