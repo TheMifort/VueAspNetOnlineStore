@@ -1,4 +1,6 @@
-﻿const state = {
+﻿import Vue from 'vue'
+
+const state = {
     cartItems: []
 };
 
@@ -36,8 +38,10 @@ const actions = {
 const mutations = {
     CART_ADD: (state, item) => {
         state.cartItems.push(item);
+        Vue.set(item, '_rowVariant', 'info');
     },
     CART_DELETE: (state, item) => {
+        Vue.delete(item, '_rowVariant', 'info');
         state.cartItems = state.cartItems.filter(e => e.id !== item.id);
     },
     CART_EDIT: (state, item) => {
@@ -47,6 +51,10 @@ const mutations = {
         item.count++;
     },
     CART_DEC: (state, item) => {
+        if (item.count <= 0) {
+            Vue.delete(item, '_rowVariant', 'info');
+            state.cartItems = state.cartItems.filter(e => e.id !== item.id);
+        }
         item.count--;
     }
 };

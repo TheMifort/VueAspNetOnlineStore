@@ -140,7 +140,8 @@
                     priceFrom: "",
                     priceTo: "",
                     category: ""
-                }
+                }//,
+                //cartItems: []
             }
         },
         computed: {
@@ -149,8 +150,18 @@
                     return this.$store.getters.items;
                 }
             },
+            //cartItems: {
+            //    get() {
+            //        return this.$store.getters.cartItems
+            //    }
+            //},
             items: {
                 get() {
+                    //for (let currentItem of this.allItems) {
+                    //    if (this.cartItems.some(e => e.id == currentItem.id)) {
+                    //        this.$set(currentItem, '_rowVariant', 'info');
+                    //    }
+                    //}
                     return this.allItems.filter(e => e.name.startsWith(this.filter.name)
                         && e.code.startsWith(this.filter.code)
                         && e.category.startsWith(this.filter.category)
@@ -162,8 +173,8 @@
         },
 
         methods: {
-            cart(item) {
-                alert(JSON.stringify(item));
+            cart(row) {
+                this.$store.dispatch('CART_ADD', row.item);
             },
             onRowSelected(items) {
 
