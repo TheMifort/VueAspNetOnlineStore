@@ -72,14 +72,17 @@ namespace OnlineStore.Areas.Items.Controllers
 
         // DELETE: api/ApiWithActions/5
         [HttpDelete("{id}")]
-        public async Task Delete(Guid id)
+        public async Task<IActionResult> Delete(Guid id)
         {
             var entry = await _databaseContext.Items.FirstOrDefaultAsync(e => e.Id == id);
             if (entry != null)
             {
                 _databaseContext.Items.Remove(entry);
                 await _databaseContext.SaveChangesAsync();
+                return Ok();
             }
+
+            return BadRequest();
         }
     }
 }

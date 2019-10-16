@@ -41,11 +41,23 @@ const actions = {
     ITEM_CREATE: ({ commit }, item) => {
         return new Promise((resolve, reject) => {
             commit("ITEMS_REQUEST");
-            alert(JSON.stringify(item));
             axios
                 .post("api/Items/", { name: item.name, code: item.code, price: item.price, category: item.category })//TODO send just item?
                 .then(resp => {
                     //commit("ITEM_SUCCESS", resp);
+                    resolve(resp);
+                }).catch(err => {
+                    commit("ITEM_ERROR", err);
+                    reject(err);
+                });
+        });
+    },
+    ITEM_DELETE: ({ commit }, itemId) => {
+        return new Promise((resolve, reject) => {
+            commit("ITEMS_REQUEST");
+            axios
+                .delete(`api/Items/${itemId}`)
+                .then(resp => {
                     resolve(resp);
                 }).catch(err => {
                     commit("ITEM_ERROR", err);

@@ -30,8 +30,7 @@
         </div>
 
         <div class="col-9">
-            <b-table
-                     striped hover
+            <b-table striped hover
                      :items="items"
                      :fields="fields"
                      :busy="isBusy"
@@ -40,6 +39,16 @@
                 <template v-slot:cell(cart)="row">
                     <b-button size="sm" @click="cart(row)" class="mr-2">
                         <i class="fas fa-sm fa-cart-plus"></i>
+                    </b-button>
+                </template>
+                <template v-slot:cell(edit)="row">
+                    <b-button size="sm" @click="edit(row)" class="mr-2">
+                        <i class="fas fa-sm fa-edit"></i>
+                    </b-button>
+                </template>
+                <template v-slot:cell(delete)="row">
+                    <b-button size="sm" @click="deleteItem(row)" class="mr-2">
+                        <i class="fas fa-sm fa-trash-alt"></i>
                     </b-button>
                 </template>
 
@@ -116,7 +125,7 @@
         data() {
             return {
                 isBusy: false,
-                fields: ['name', 'code', 'price', 'category', 'cart'],
+                fields: ['name', 'code', 'price', 'category', 'cart', 'edit', 'delete'],
                 newItem: {
                     name: "",
                     code: "",
@@ -160,6 +169,18 @@
         methods: {
             cart(row) {
                 this.$store.dispatch('CART_ADD', row.item);
+            },
+            edit(row) {
+                this.item.id = row.item.id;
+                this.item.name = row.item.name;
+                this.item.code = row.item.code;
+                this.item.price = row.item.price;
+                this.item.category = row.item.category;
+                this.$refs['modal-item'].show();
+            },
+            async deleteItem(row) {
+                await this.$store.dispatch('ITEM_DELETE', row.item.id);
+                await this.fetchData();
             },
             onRowDoubleClicked(item) {
                 this.item.id = item.id;
