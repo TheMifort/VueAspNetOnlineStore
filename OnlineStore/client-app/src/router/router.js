@@ -7,6 +7,7 @@ import HelloWorld from '../components/HelloWorld.vue'
 import Users from '../components/Users.vue'
 import Customers from '../components/Customers.vue'
 import Items from '../components/Items.vue'
+import Cart from '../components/Cart.vue'
 
 Vue.use(Router);
 
@@ -62,6 +63,12 @@ export default new Router({
             path: '/items',
             name: 'Items',
             component: Items,
+            //beforeEnter: ifNotAuthenticated,
+        },
+        {
+            path: '/cart',
+            name: 'Cart',
+            component: Cart,
             //beforeEnter: ifNotAuthenticated,
         },
     ],

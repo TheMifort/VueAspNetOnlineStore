@@ -119,7 +119,7 @@ const mutations = {
     },
     CART_DELETE: (state, item) => {
         Vue.delete(item, '_rowVariant', 'info');
-        state.cartItems = state.cartItems.filter(e => e.id !== item.id);
+        state.cartItems.splice(state.cartItems.indexOf(item), 1);
     },
     CART_EDIT: (state, item) => {
 
@@ -128,9 +128,9 @@ const mutations = {
         item.count++;
     },
     CART_DEC: (state, item) => {
-        if (item.count <= 0) {
+        if (item.count <= 1) {
             Vue.delete(item, '_rowVariant', 'info');
-            state.cartItems = state.cartItems.filter(e => e.id !== item.id);
+            state.cartItems.splice(state.cartItems.indexOf(item), 1);
         }
         item.count--;
     },
