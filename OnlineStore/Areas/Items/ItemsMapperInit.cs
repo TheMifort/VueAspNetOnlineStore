@@ -21,7 +21,7 @@ namespace OnlineStore.Areas.Items
             config.CreateMap<OrderItem, OrderItemResponseModel>();
             config.CreateMap<Order, OrderResponseModel>();
 
-            config.CreateMap<OrderItemRequestModel, Order>();
+            config.CreateMap<OrderItemRequestModel, OrderItem>();
             config.CreateMap<OrderRequestModel, Order>()
                 .ForMember(e => e.OrderNumber, e => e.MapFrom(l => random.Next()))
                 .ForMember(e => e.OrderDate, e => e.MapFrom(l => DateTime.Now));

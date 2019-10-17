@@ -30,6 +30,7 @@
                 </div>
             </template>
         </b-table>
+        <b-button v-if="true" @click="order">Order</b-button>
     </div>
 </template>
 
@@ -70,6 +71,9 @@
             },
             async deleteItem(row) {
                 await this.$store.dispatch('CART_DELETE', row.item.id);
+            },
+            order(){
+                this.$store.dispatch('ORDER');
             }
         }
     }

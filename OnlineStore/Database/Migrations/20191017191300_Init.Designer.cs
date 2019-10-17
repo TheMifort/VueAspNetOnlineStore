@@ -10,7 +10,7 @@ using OnlineStore.Database;
 namespace OnlineStore.Database.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    [Migration("20190924132006_Init")]
+    [Migration("20191017191300_Init")]
     partial class Init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -460,7 +460,7 @@ namespace OnlineStore.Database.Migrations
             modelBuilder.Entity("OnlineStore.Models.Database.User", b =>
                 {
                     b.HasOne("OnlineStore.Models.Database.Customer", "Customer")
-                        .WithMany()
+                        .WithMany("Users")
                         .HasForeignKey("CustomerId");
                 });
 #pragma warning restore 612, 618

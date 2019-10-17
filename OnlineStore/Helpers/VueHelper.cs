@@ -20,10 +20,12 @@ namespace OnlineStore.Helpers
 
         private static string DoneMessage { get; } = "DONE  Compiled successfully in";
 
-        public static void UseVueDevelopmentServer(this ISpaBuilder spa)
+        public static void UseVueDevelopmentServer(this ISpaBuilder spa, bool runNode = true)
         {
             spa.UseProxyToSpaDevelopmentServer(async () =>
             {
+                if (!runNode) return DevelopmentServerEndpoint;
+
                 var loggerFactory = spa.ApplicationBuilder.ApplicationServices.GetService<ILoggerFactory>();
                 var logger = loggerFactory.CreateLogger("Vue");
 
@@ -91,12 +93,11 @@ namespace OnlineStore.Helpers
 
                 return DevelopmentServerEndpoint;
             });
-
         }
 
         private static bool IsRunning() => IPGlobalProperties.GetIPGlobalProperties()
-                .GetActiveTcpListeners()
-                .Select(x => x.Port)
-                .Contains(Port);
+            .GetActiveTcpListeners()
+            .Select(x => x.Port)
+            .Contains(Port);
     }
 }

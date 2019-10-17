@@ -4,6 +4,6 @@ namespace OnlineStore.Models.Enums
     {
         New,
         Performed,
-        Complited
+        Completed
     }
 }

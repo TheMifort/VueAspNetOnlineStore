@@ -1,5 +1,7 @@
 using System;
+using System.Net;
 using System.Reflection;
+using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
@@ -43,14 +45,30 @@ namespace OnlineStore
 
             services.AddSingleton(authOptions);
 
-            services.AddAuthorization(options =>
-            {
-                options.DefaultPolicy = new AuthorizationPolicyBuilder(JwtBearerDefaults.AuthenticationScheme)
-                    .RequireAuthenticatedUser()
-                    .Build();
-            });
 
-            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+            services.AddIdentity<User, IdentityRole>(options =>
+                {
+                    options.Password.RequireDigit = false;
+                    options.Password.RequiredLength = 4;
+                    options.Password.RequireNonAlphanumeric = false;
+                    options.Password.RequireUppercase = false;
+                    options.Password.RequireLowercase = false;
+                })
+                .AddEntityFrameworkStores<DatabaseContext>().AddDefaultTokenProviders();
+
+            //services.AddAuthorization(options =>
+            //{
+            //    options.DefaultPolicy = new AuthorizationPolicyBuilder(JwtBearerDefaults.AuthenticationScheme)
+            //        .RequireAuthenticatedUser()
+            //        .Build();
+            //});
+
+            services.AddAuthentication(options =>
+                {
+                    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                    options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+                })
                 .AddJwtBearer(options =>
                 {
                     options.TokenValidationParameters = new TokenValidationParameters
@@ -70,15 +88,6 @@ namespace OnlineStore
 
             services.AddDbContext<DatabaseContext>(options =>
                 options.UseLazyLoadingProxies().UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
-
-            services.AddIdentity<User, IdentityRole>(options => {
-                    options.Password.RequireDigit = false;
-                    options.Password.RequiredLength = 4;
-                    options.Password.RequireNonAlphanumeric = false;
-                    options.Password.RequireUppercase = false;
-                    options.Password.RequireLowercase = false;
-                })
-                .AddEntityFrameworkStores<DatabaseContext>().AddDefaultTokenProviders();
 
             services.AddAutoMapper(configAction: cfg =>
             {
@@ -101,11 +110,15 @@ namespace OnlineStore
 
             app.UseAuthentication();
             app.UseAuthorization();
+            //app.UseStatusCodePages(async context => {
+            //    var response = context.HttpContext.Response;
 
-            app.UseEndpoints(endpoints =>
-            {
-                endpoints.MapControllers();
-            });
+            //    if (response.StatusCode == (int)HttpStatusCode.Unauthorized)
+            //    {
+
+            //    }
+            //});
+            app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
 
             using (var scope = app.ApplicationServices.CreateScope())
             {
@@ -118,7 +131,7 @@ namespace OnlineStore
                 spa.Options.SourcePath = "client-app";
                 if (env.IsDevelopment())
                 {
-                    spa.UseVueDevelopmentServer();
+                    spa.UseVueDevelopmentServer(false);
                 }
             });
         }

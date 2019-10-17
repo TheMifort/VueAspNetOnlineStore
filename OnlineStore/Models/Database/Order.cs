@@ -17,11 +17,9 @@ namespace OnlineStore.Models.Database
         [Required] [ForeignKey("CustomerId")]
         public virtual Customer Customer { get; set; }
 
-        [Required]
         [Column("ORDER_DATE", TypeName = "date")]
         public DateTime? OrderDate { get; set; }
 
-        [Required]
         [Column("SHIPMENT_DATE", TypeName = "date")]
         public DateTime? ShipmentDate { get; set; }
 

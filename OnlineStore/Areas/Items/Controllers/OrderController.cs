@@ -17,7 +17,7 @@ namespace OnlineStore.Areas.Items.Controllers
 {
     [Route("api/[area]/[controller]")]
     [ApiController]
-    [Authorize]
+  //  [Authorize]
     [Area("Items")]
     public class OrderController : ControllerBase
     {
@@ -44,36 +44,40 @@ namespace OnlineStore.Areas.Items.Controllers
             return _mapper.Map<IEnumerable<Order>, IEnumerable<OrderResponseModel>>(orders);
         }
 
+        [Authorize]
         [HttpPost]
         public async Task<IActionResult> Post([FromBody] OrderRequestModel model)
         {
             if (ModelState.IsValid)
             {
-                var customer = (await _userManager.GetUserAsync(User)).Customer;
+                var user = await _userManager.GetUserAsync(User);
+                var customer = (user).Customer;
                 if (customer == null)
                     return BadRequest();
 
-                var order = _mapper.Map<OrderRequestModel, Order>(model);
-                order.OrderItems = new List<OrderItem>();
-                foreach (var modelItem in model.OrderItems)
-                {
-                    var item = await _context.Items.FirstOrDefaultAsync(e => e.Id == modelItem.ItemId);
-                    if (item == null) continue;
-                    var discount = customer.Discount;
+                var order = new Order {OrderItems = new List<OrderItem>()};
 
-                    var orderItem = new OrderItem
+                foreach (var orderItem in model.OrderItems)
+                {
+                    var item = await _context.Items.FirstOrDefaultAsync(e => e.Id == orderItem.ItemId);
+                    if(item == null)continue;
+
+                    var mappedOrderItem = new OrderItem
                     {
                         Item = item,
-                        ItemPrice = item.Price - discount > 0 ? item.Price * discount : 0,
-                        ItemsCount = modelItem.ItemsCount
+                        ItemPrice = item.Price - item.Price * customer.Discount,
+                        ItemsCount = orderItem.ItemsCount
                     };
 
-                    order.OrderItems.Add(orderItem);
+                    order.OrderItems.Add(mappedOrderItem);
                 }
 
+                order.OrderNumber = (await _context.Orders.OrderByDescending(e => e.OrderNumber).FirstOrDefaultAsync())
+                                    ?.OrderNumber + 1 ?? 0;
                 order.Status = OrderStatus.New;
+                order.OrderDate = DateTime.Now;
 
-                await _context.Orders.AddAsync(order);
+                customer.Orders.Add(order);
                 await _context.SaveChangesAsync();
                 return Ok();
             }
@@ -81,7 +85,7 @@ namespace OnlineStore.Areas.Items.Controllers
             return BadRequest(); //TODO Specify errors
         }
 
-        [Authorize(Roles = "Manager")]
+       // [Authorize(Roles = "Manager")]
         [HttpPut("{id}")]
         public async Task<IActionResult> Confirm(Guid id, ConfirmOrderRequestModel model)
         {
