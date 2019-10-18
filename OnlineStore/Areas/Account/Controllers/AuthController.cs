@@ -66,7 +66,9 @@ namespace OnlineStore.Areas.Account.Controllers
                         RefreshToken = refreshToken,
                         Name = identity.Name,
                         ExpiresAt = expiresAt,
-                        Role = role
+                        Role = role,
+                        CustomerName = user.Customer?.Name,
+                        CustomerCode = user.Customer?.Code.ToString()
                     };
 
                     refreshTokenEntry.Token = refreshToken;
@@ -110,7 +112,9 @@ namespace OnlineStore.Areas.Account.Controllers
                         RefreshToken = refreshToken,
                         Name = identity.Name,
                         ExpiresAt = expiresAt,
-                        Role = role
+                        Role = role,
+                        CustomerName = user.Customer?.Name,
+                        CustomerCode = user.Customer?.Code.ToString()
                     };
 
                     user.RefreshTokens.Add(new RefreshToken

@@ -10,5 +10,8 @@ namespace OnlineStore.Areas.Account.Models.Response.Auth
         public DateTime ExpiresAt { get; set; }
 
         public string Role { get; set; }
+
+        public string CustomerName { get; set; }
+        public string CustomerCode { get; set; }
     }
 }
