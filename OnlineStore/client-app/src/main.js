@@ -15,6 +15,8 @@ import BootstrapVue from 'bootstrap-vue'
 Vue.use(BootstrapVue);
 Vue.config.productionTip = false;
 document.title = "OnlineStore";
+Vue.config.devtools = process.env.NODE_ENV === 'development';
+
 const token = localStorage.getItem('token');
 if (token) {
     axios.defaults.headers.common['Authorization'] = "Bearer " + token;
@@ -34,8 +36,10 @@ axios.interceptors.response.use((response) => {
     return Promise.reject(error);
 });
 
-new Vue({
+let app = new Vue({
     store,
     router,
     render: h => h(App),
 }).$mount('#app');
+
+window.__VUE_DEVTOOLS_GLOBAL_HOOK__.Vue = app.constructor;

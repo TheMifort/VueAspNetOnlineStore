@@ -18,15 +18,40 @@ const ifNotAuthenticated = (to, from, next) => {
         return;
     }
     next('/');
-}
+};
 
 const ifAuthenticated = (to, from, next) => {
+    alert(store.getters.isAuthenticated);
     if (store.getters.isAuthenticated) {
         next();
         return;
     }
     next('/login');
-}
+};
+
+const ifUser = (to, from, next) => {
+    if (store.getters.isAuthenticated && store.getters.isUser) {
+        next();
+        return;
+    }
+    next('/');
+};
+
+const ifManager = (to, from, next) => {
+    if (store.getters.isAuthenticated && store.getters.isManager) {
+        next();
+        return;
+    }
+    next('/');
+};
+
+const hasCustomer = (to, from, next) => {
+    if (store.getters.isAuthenticated && store.getters.isUser && store.getters.hasCustomer) {
+        next();
+        return;
+    }
+    next('/');
+};
 
 export default new Router({
     mode: 'history',
@@ -36,47 +61,41 @@ export default new Router({
             name: 'HelloWorld',
             component: HelloWorld
         },
-        //{
-        //    path: '/account',
-        //    name: 'Account',
-        //    component: Account,
-        //    beforeEnter: ifAuthenticated,
-        //},
         {
             path: '/login',
             name: 'Login',
             component: Login,
-            //beforeEnter: ifNotAuthenticated,
+            beforeEnter: ifNotAuthenticated,
         },
         {
             path: '/users',
             name: 'Users',
             component: Users,
-            //beforeEnter: ifNotAuthenticated,
+            beforeEnter: ifAuthenticated,
         },
         {
             path: '/customers',
             name: 'Customers',
             component: Customers,
-            //beforeEnter: ifNotAuthenticated,
+            beforeEnter: ifManager,
         },
         {
             path: '/items',
             name: 'Items',
             component: Items,
-            //beforeEnter: ifNotAuthenticated,
+            beforeEnter: hasCustomer,
         },
         {
             path: '/cart',
             name: 'Cart',
             component: Cart,
-            //beforeEnter: ifNotAuthenticated,
+            beforeEnter: ifUser,
         },
         {
             path: '/orders',
             name: 'Orders',
             component: Orders,
-            //beforeEnter: ifNotAuthenticated,
+            beforeEnter: ifAuthenticated,
         },
     ],
 })

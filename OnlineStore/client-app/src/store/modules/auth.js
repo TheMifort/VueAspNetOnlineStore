@@ -13,8 +13,8 @@ const state = {
 const getters = {
     isAuthenticated: state => !!state.token,
     isManager: state => state.role === "Manager",
-    isUser: state => state.role === "User",
-    hasCustomer: state => !!state.customer.Name,
+    isUser: state =>  state.role === "User",
+    hasCustomer: state => !!state.customerName,
     customer: state => state.customerName + '(' + state.customerCode + ')',
     authStatus: state => state.status,
     userName: state => state.username,
@@ -48,6 +48,7 @@ const actions = {
                     resolve(resp);
                 }).catch(err => {
                 commit("AUTH_ERROR", err);
+                commit("AUTH_LOGOUT", err);
                 reject(err);
             });
         });
@@ -75,6 +76,13 @@ const mutations = {
         state.status = "loading";
     },
     AUTH_SUCCESS: (state, resp) => {
+        state.role = resp.data.Role;
+        state.token = resp.data.AccessToken;
+        state.userName = resp.data.Name;
+        state.refreshToken = resp.data.RefreshToken;
+        state.customerName = resp.data.CustomerName;
+        state.customerCode = resp.data.CustomerCode;
+
         localStorage.setItem("role", resp.data.Role);
         localStorage.setItem("token", resp.data.AccessToken);
         localStorage.setItem("username", resp.data.Name);
@@ -85,21 +93,24 @@ const mutations = {
         state.status = "success";
     },
     AUTH_ERROR: (state) => {
-        localStorage.removeItem("token");
-        localStorage.removeItem("role");
-        localStorage.removeItem("refreshToken");
-        localStorage.removeItem("username");
-        localStorage.removeItem("customerCode");
-        localStorage.removeItem("customerName");
         state.status = "error";
     },
     AUTH_LOGOUT: (state) => {
+        state.role = "";
+        state.token = "";
+        state.userName = "";
+        state.refreshToken ="";
+        state.customerName = "";
+        state.customerCode = "";
+
         localStorage.removeItem("token");
         localStorage.removeItem("role");
         localStorage.removeItem("refreshToken");
         localStorage.removeItem("username");
         localStorage.removeItem("customerCode");
         localStorage.removeItem("customerName");
+
+        axios.defaults.headers.common['Authorization'] = "";
         state.role = "";
     }
 };
