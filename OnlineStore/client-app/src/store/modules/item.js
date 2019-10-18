@@ -177,12 +177,16 @@ const mutations = {
     CART_SAVE: (state) => {
         localStorage.setItem('cartItems', JSON.stringify(state.cartItems));
     },
+    CART_CLEAR: (state) => {
+        localStorage.removeItem('cartItems');
+        state.cartItems = [];
+    },
     ORDER_SUCCESS: (state, resp) => {
         state.orders = resp.data;
-        for(let order of state.orders){
-            if(order.state === 1)
+        for (let order of state.orders) {
+            if (order.state === 1)
                 Vue.set(order, '_rowVariant', 'info');
-            else if(order.state === 2)
+            else if (order.state === 2)
                 Vue.set(order, '_rowVariant', 'success');
         }
     }

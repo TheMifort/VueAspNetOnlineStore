@@ -42,7 +42,7 @@
         data() {
             return {
                 isBusy: false,
-                fields: ['name', 'code', 'price', 'category','-','count','+','delete'],
+                fields: ['name', 'code', 'price', 'category', '-', 'count', '+', 'delete'],
                 item: {
                     id: {},
                     name: "",
@@ -72,8 +72,9 @@
             async deleteItem(row) {
                 await this.$store.dispatch('CART_DELETE', row.item.id);
             },
-            order(){
-                this.$store.dispatch('ORDER');
+            async order() {
+                await this.$store.dispatch('ORDER');
+                this.$store.commit('CART_CLEAR');
             }
         }
     }
