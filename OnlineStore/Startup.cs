@@ -1,10 +1,7 @@
 using System;
-using System.Net;
 using System.Reflection;
-using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
@@ -56,13 +53,6 @@ namespace OnlineStore
                 })
                 .AddEntityFrameworkStores<DatabaseContext>().AddDefaultTokenProviders();
 
-            //services.AddAuthorization(options =>
-            //{
-            //    options.DefaultPolicy = new AuthorizationPolicyBuilder(JwtBearerDefaults.AuthenticationScheme)
-            //        .RequireAuthenticatedUser()
-            //        .Build();
-            //});
-
             services.AddAuthentication(options =>
                 {
                     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -110,14 +100,7 @@ namespace OnlineStore
 
             app.UseAuthentication();
             app.UseAuthorization();
-            //app.UseStatusCodePages(async context => {
-            //    var response = context.HttpContext.Response;
 
-            //    if (response.StatusCode == (int)HttpStatusCode.Unauthorized)
-            //    {
-
-            //    }
-            //});
             app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
 
             using (var scope = app.ApplicationServices.CreateScope())

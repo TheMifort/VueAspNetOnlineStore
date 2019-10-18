@@ -27,7 +27,6 @@
                             <em>{{userName}}</em>
                         </template>
                         <b-dropdown-item @click="$router.push('/login')">Profile</b-dropdown-item>
-                        <b-dropdown-item @click="$router.push('/users')">Sign Out</b-dropdown-item>
                         <b-dropdown-item @click="signOut">Sign Out</b-dropdown-item>
                     </b-nav-item-dropdown>
                 </b-navbar-nav>

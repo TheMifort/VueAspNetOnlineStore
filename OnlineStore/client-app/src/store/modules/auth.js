@@ -65,7 +65,6 @@ const actions = {
                     resolve(resp);
                 })
                 .catch(err => {
-                    alert(err);
                 });
         });
     }
