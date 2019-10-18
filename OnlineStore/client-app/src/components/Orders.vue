@@ -32,12 +32,24 @@
 </template>
 
 <script>
+    import moment from 'moment'
     export default {
         name: "Orders",
         data() {
             return {
                 isBusy: false,
-                fields: ['orderNumber', 'orderDate', 'shipmentDate', 'status', 'confirm', 'complete', 'delete'],
+                fields: ['orderNumber',
+                    {
+                        key: 'orderDate', formatter: value => {
+                            if (value === null) return '-';
+                            return moment(value).format('DD.MM.YYYY');
+                        }
+                    }, {
+                        key: 'shipmentDate', formatter: value => {
+                            if (value === null) return '-';
+                            return moment(value).format('DD.MM.YYYY');
+                        }
+                    }, 'confirm', 'complete', 'delete'],
             }
         },
         computed: {
@@ -46,7 +58,20 @@
                     return this.$store.getters.orders;
                 }
             }
-        }
+        },
+
+        methods: {
+            async fetchData() {
+                this.isBusy = true;
+                await this.$store.dispatch('ORDERS_REQUEST');
+                this.isBusy = false;
+            }
+        },
+
+
+        created: async function () {
+            await this.fetchData();
+        },
     }
 </script>
 

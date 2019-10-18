@@ -178,7 +178,13 @@ const mutations = {
         localStorage.setItem('cartItems', JSON.stringify(state.cartItems));
     },
     ORDER_SUCCESS: (state, resp) => {
-        state.orders = resp;
+        state.orders = resp.data;
+        for(let order of state.orders){
+            if(order.state === 1)
+                Vue.set(order, '_rowVariant', 'info');
+            else if(order.state === 2)
+                Vue.set(order, '_rowVariant', 'success');
+        }
     }
 };
 
