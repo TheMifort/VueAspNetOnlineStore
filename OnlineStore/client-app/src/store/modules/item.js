@@ -133,8 +133,38 @@ const actions = {
             });
         });
     },
-    ORDER_CONFIRM: ({commit}) => {
-
+    ORDER_CONFIRM: ({commit}, order) => {
+        return new Promise((resolve, reject) => {
+            axios
+                .put(`api/Items/Order/${order.id}`, {shipmentDate: order.shipmentDate})
+                .then(resp => {
+                    resolve(resp);
+                }).catch(err => {
+                reject(err);
+            });
+        });
+    },
+    ORDER_COMPLETE: ({commit}, order) => {
+        return new Promise((resolve, reject) => {
+            axios
+                .put(`api/Items/Order/${order.id}`, {complete: true})
+                .then(resp => {
+                    resolve(resp);
+                }).catch(err => {
+                reject(err);
+            });
+        });
+    },
+    ORDER_DELETE: ({commit}, order) => {
+        return new Promise((resolve, reject) => {
+            axios
+                .delete(`api/Items/Order/${order.id}`)
+                .then(resp => {
+                    resolve(resp);
+                }).catch(err => {
+                reject(err);
+            });
+        });
     }
 };
 
@@ -184,11 +214,12 @@ const mutations = {
     ORDER_SUCCESS: (state, resp) => {
         state.orders = resp.data;
         for (let order of state.orders) {
-            if (order.state === 1)
+            if (order.status === 1)
                 Vue.set(order, '_rowVariant', 'info');
-            else if (order.state === 2)
+            else if (order.status === 2)
                 Vue.set(order, '_rowVariant', 'success');
         }
+
     }
 };
 

@@ -87,13 +87,20 @@ namespace OnlineStore.Areas.Items.Controllers
 
        // [Authorize(Roles = "Manager")]
         [HttpPut("{id}")]
-        public async Task<IActionResult> Confirm(Guid id, ConfirmOrderRequestModel model)
+        public async Task<IActionResult> Put(Guid id, ConfirmOrderRequestModel model)
         {
             if (ModelState.IsValid)
             {
                 var order = await _context.Orders.FirstOrDefaultAsync(e => e.Id == id);
-                order.ShipmentDate = model.ShipmentDate;
-                order.Status = OrderStatus.Performed;
+                if (model.Complete)
+                {
+                    order.Status = OrderStatus.Completed;
+                }
+                else
+                {
+                    order.ShipmentDate = model.ShipmentDate;
+                    order.Status = OrderStatus.Performed;
+                }
 
                 await _context.SaveChangesAsync();
                 return Ok();
