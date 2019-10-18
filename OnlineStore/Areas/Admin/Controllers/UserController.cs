@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -16,6 +17,7 @@ namespace OnlineStore.Areas.Admin.Controllers
     [Route("api/[area]/[controller]")]
     [Area("Admin")]
     [ApiController]
+    [Authorize(Roles = "Manager")]
     public class UserController : ControllerBase
     {
         private readonly DatabaseContext _databaseContext;

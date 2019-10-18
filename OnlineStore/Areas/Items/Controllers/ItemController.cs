@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using OnlineStore.Areas.Items.Models.Request.Items;
@@ -15,6 +16,7 @@ namespace OnlineStore.Areas.Items.Controllers
     [Route("api/[area]")]
     [ApiController]
     [Area("Items")]
+    [Authorize(Roles = "User,Manager")]
     public class ItemController : ControllerBase
     {
         private readonly DatabaseContext _databaseContext;
@@ -42,6 +44,7 @@ namespace OnlineStore.Areas.Items.Controllers
 
         // POST: api/Items
         [HttpPost]
+        [Authorize(Roles = "Manager")]
         public async Task<IActionResult> Post([FromBody] ItemRequestModel value)
         {
             if (ModelState.IsValid)
@@ -56,6 +59,7 @@ namespace OnlineStore.Areas.Items.Controllers
 
         // PUT: api/Items/5
         [HttpPut("{id}")]
+        [Authorize(Roles = "Manager")]
         public async Task<IActionResult> Put(Guid id, [FromBody] ItemRequestModel value)
         {
             if (ModelState.IsValid)
@@ -72,6 +76,7 @@ namespace OnlineStore.Areas.Items.Controllers
 
         // DELETE: api/ApiWithActions/5
         [HttpDelete("{id}")]
+        [Authorize(Roles = "Manager")]
         public async Task<IActionResult> Delete(Guid id)
         {
             var entry = await _databaseContext.Items.FirstOrDefaultAsync(e => e.Id == id);

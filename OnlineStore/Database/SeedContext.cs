@@ -14,15 +14,14 @@ namespace OnlineStore.Database
         {
             var roles = new List<string>
             {
-                "Admin",
                 "Manager",
                 "User"
             };
 
             var user = new User
             {
-                UserName = "Admin",
-                NormalizedUserName = "ADMIN",
+                UserName = "Manager",
+                NormalizedUserName = "MANAGER",
                 LockoutEnabled = false,
                 SecurityStamp = Guid.NewGuid().ToString()
             };
@@ -44,7 +43,7 @@ namespace OnlineStore.Database
                 user.PasswordHash = hashed;
                 using var userStore = new UserStore<User>(context);
                 await userStore.CreateAsync(user);
-                await userStore.AddToRoleAsync(user, "Admin");
+                await userStore.AddToRoleAsync(user, "Manager");
             }
 
             await context.SaveChangesAsync();

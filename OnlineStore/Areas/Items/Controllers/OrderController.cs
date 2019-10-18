@@ -17,7 +17,7 @@ namespace OnlineStore.Areas.Items.Controllers
 {
     [Route("api/[area]/[controller]")]
     [ApiController]
-  //  [Authorize]
+    [Authorize(Roles = "User,Manager")]
     [Area("Items")]
     public class OrderController : ControllerBase
     {
@@ -36,7 +36,7 @@ namespace OnlineStore.Areas.Items.Controllers
         {
             var user = await _userManager.GetUserAsync(User);
             List<Order> orders;
-            if (!User.IsInRole("Admin") && !User.IsInRole("Manager"))
+            if (!User.IsInRole("Manager"))
                 orders = user.Customer?.Orders?.ToList() ?? new List<Order>();
 
             else orders = _context.Orders.ToList();
@@ -44,7 +44,7 @@ namespace OnlineStore.Areas.Items.Controllers
             return _mapper.Map<IEnumerable<Order>, IEnumerable<OrderResponseModel>>(orders);
         }
 
-        [Authorize]
+        [Authorize(Roles = "User")]
         [HttpPost]
         public async Task<IActionResult> Post([FromBody] OrderRequestModel model)
         {
@@ -85,7 +85,7 @@ namespace OnlineStore.Areas.Items.Controllers
             return BadRequest(); //TODO Specify errors
         }
 
-       // [Authorize(Roles = "Manager")]
+        [Authorize(Roles = "Manager")]
         [HttpPut("{id}")]
         public async Task<IActionResult> Put(Guid id, ConfirmOrderRequestModel model)
         {
@@ -108,14 +108,17 @@ namespace OnlineStore.Areas.Items.Controllers
 
             return BadRequest(); //TODO Specify errors
         }
-
+        [Authorize]
         [HttpDelete("{id}")]
         public async Task Delete(Guid id)
         {
             var entry = await _context.Orders.FirstOrDefaultAsync(e => e.Id == id);
             if (entry != null)
             {
-                _context.Orders.Remove(entry);
+                var user = await _userManager.GetUserAsync(User);
+                if(entry.Customer.Users.Exists(e=>e.Id == user.Id) && entry.Status == OrderStatus.New || User.IsInRole("Manager"))
+                    _context.Orders.Remove(entry);
+
                 await _context.SaveChangesAsync();
             }
         }

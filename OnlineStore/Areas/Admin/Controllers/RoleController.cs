@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using OnlineStore.Areas.Admin.Models.Request.Role;
@@ -11,6 +12,7 @@ namespace OnlineStore.Areas.Admin.Controllers
 {
     [Route("api/[area]/[controller]")]
     [Area("Account")]
+    [Authorize(Roles = "Manager")]
     public class RoleController : ControllerBase
     {
         private readonly RoleManager<IdentityRole> _roleManager;

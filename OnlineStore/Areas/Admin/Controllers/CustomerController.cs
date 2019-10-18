@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using OnlineStore.Areas.Admin.Models.Request.Customer;
@@ -15,6 +16,7 @@ namespace OnlineStore.Areas.Admin.Controllers
     [Route("api/[area]/[controller]")]
     [Area("Admin")]
     [ApiController]
+    [Authorize(Roles = "Manager")]
     public class CustomerController : ControllerBase
     {
         private readonly DatabaseContext _databaseContext;
