@@ -13,44 +13,46 @@ const state = {
 const getters = {
     isAuthenticated: state => !!state.token,
     isManager: state => state.role === "Manager",
+    isUser: state => state.role === "User",
     hasCustomer: state => !!state.customer.Name,
     customer: state => state.customerName + '(' + state.customerCode + ')',
-    authStatus: state => state.status
+    authStatus: state => state.status,
+    userName: state => state.username,
 };
 
 const actions = {
-    AUTH_REQUEST: ({ commit }, user) => {
+    AUTH_REQUEST: ({commit}, user) => {
         return new Promise((resolve, reject) => {
             commit("AUTH_REQUEST");
 
             axios
-                .post('api/Account/Auth/Login', { "username": user.username, "password": user.password })
+                .post('api/Account/Auth/Login', {"username": user.username, "password": user.password})
                 .then(resp => {
 
                     commit("AUTH_SUCCESS", resp);
                     resolve(resp);
                 }).catch(err => {
-                    commit("AUTH_ERROR", err);
-                    reject(err);
-                });
+                commit("AUTH_ERROR", err);
+                reject(err);
+            });
         });
     },
-    AUTH_REFRESH: ({ commit }) => {
+    AUTH_REFRESH: ({commit}) => {
         return new Promise((resolve, reject) => {
             commit("AUTH_REQUEST");
 
             axios
-                .post('api/Account/Auth/Token', { "refreshToken": localStorage.getItem("refreshToken") })
+                .post('api/Account/Auth/Token', {"refreshToken": localStorage.getItem("refreshToken")})
                 .then(resp => {
                     commit("AUTH_SUCCESS", resp);
                     resolve(resp);
                 }).catch(err => {
-                    commit("AUTH_ERROR", err);
-                    reject(err);
-                });
+                commit("AUTH_ERROR", err);
+                reject(err);
+            });
         });
     },
-    AUTH_LOGOUT: ({ commit }) => {
+    AUTH_LOGOUT: ({commit}) => {
         return new Promise((resolve) => {
             axios
                 .post('api/Account/SignOut')
