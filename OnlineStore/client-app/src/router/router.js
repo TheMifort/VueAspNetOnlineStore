@@ -21,7 +21,6 @@ const ifNotAuthenticated = (to, from, next) => {
 };
 
 const ifAuthenticated = (to, from, next) => {
-    alert(store.getters.isAuthenticated);
     if (store.getters.isAuthenticated) {
         next();
         return;
@@ -83,7 +82,7 @@ export default new Router({
             path: '/items',
             name: 'Items',
             component: Items,
-            beforeEnter: hasCustomer,
+            beforeEnter: ifAuthenticated,
         },
         {
             path: '/cart',

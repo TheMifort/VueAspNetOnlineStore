@@ -5,27 +5,27 @@
             <b-form-group id="fieldset-1"
                           label="Name"
                           label-for="input-filter-name">
-                <b-form-input id="input-filter-name" v-model="filter.name" trim />
+                <b-form-input id="input-filter-name" v-model="filter.name" trim/>
             </b-form-group>
             <b-form-group id="fieldset-1"
                           label="Code"
                           label-for="input-filter-code">
-                <b-form-input id="input-filter-code" v-model="filter.code" trim />
+                <b-form-input id="input-filter-code" v-model="filter.code" trim/>
             </b-form-group>
             <b-form-group id="fieldset-1"
                           label="Category"
                           label-for="input-filter-category">
-                <b-form-input id="input-filter-category" v-model="filter.category" trim />
+                <b-form-input id="input-filter-category" v-model="filter.category" trim/>
             </b-form-group>
             <b-form-group id="fieldset-1"
                           label="Price from"
                           label-for="input-filter-priceFrom">
-                <b-form-input id="input-filter-priceFrom" type="number" v-model.number="filter.priceFrom" trim />
+                <b-form-input id="input-filter-priceFrom" type="number" v-model.number="filter.priceFrom" trim/>
             </b-form-group>
             <b-form-group id="fieldset-1"
                           label="Price to"
                           label-for="input-filter-priceTo">
-                <b-form-input id="input-filter-priceTo" type="number" v-model.number="filter.priceTo" trim />
+                <b-form-input id="input-filter-priceTo" type="number" v-model.number="filter.priceTo" trim/>
             </b-form-group>
         </div>
 
@@ -60,30 +60,30 @@
                 </template>
             </b-table>
 
-            <b-button v-if="true" v-b-modal.modal-item-add>Add item</b-button>
+            <b-button v-if="$store.getters.isManager" v-b-modal.modal-item-add>Add item</b-button>
             <b-modal ref="modal-item-add" id="modal-item-add" title="Create new item" @ok="okAdd" @cancel="cancelAdd">
                 <b-form-group id="fieldset-1"
                               label="Name"
                               label-for="input-new-itemName">
-                    <b-form-input id="input-new-itemName" v-model="newItem.name" trim />
+                    <b-form-input id="input-new-itemName" v-model="newItem.name" trim/>
                 </b-form-group>
 
                 <b-form-group id="fieldset-1"
                               label="Code"
                               label-for="input-new-code">
-                    <b-form-input id="input-new-code" v-model="newItem.code" trim />
+                    <b-form-input id="input-new-code" v-model="newItem.code" trim/>
                 </b-form-group>
 
                 <b-form-group id="fieldset-1"
                               label="Price"
                               label-for="input-new-price">
-                    <b-form-input id="input-new-price" type="number" v-model.number="newItem.price" trim />
+                    <b-form-input id="input-new-price" type="number" v-model.number="newItem.price" trim/>
                 </b-form-group>
 
                 <b-form-group id="fieldset-1"
                               label="Category"
                               label-for="input-new-category">
-                    <b-form-input id="input-new-category" v-model="newItem.category" trim />
+                    <b-form-input id="input-new-category" v-model="newItem.category" trim/>
                 </b-form-group>
 
             </b-modal>
@@ -92,25 +92,25 @@
                 <b-form-group id="fieldset-1"
                               label="Name"
                               label-for="input-itemName">
-                    <b-form-input id="input-itemName" v-model="item.name" trim />
+                    <b-form-input id="input-itemName" v-model="item.name" trim/>
                 </b-form-group>
 
                 <b-form-group id="fieldset-1"
                               label="Code"
                               label-for="input-code">
-                    <b-form-input id="input-code" v-model="item.code" trim />
+                    <b-form-input id="input-code" v-model="item.code" trim/>
                 </b-form-group>
 
                 <b-form-group id="fieldset-1"
                               label="Price"
                               label-for="input-price">
-                    <b-form-input id="input-price" type="number" v-model.number="item.price" trim />
+                    <b-form-input id="input-price" type="number" v-model.number="item.price" trim/>
                 </b-form-group>
 
                 <b-form-group id="fieldset-1"
                               label="Catefory"
                               label-for="input-category">
-                    <b-form-input id="input-category" v-model="item.category" trim />
+                    <b-form-input id="input-category" v-model="item.category" trim/>
                 </b-form-group>
             </b-modal>
         </div>
@@ -125,7 +125,6 @@
         data() {
             return {
                 isBusy: false,
-                fields: ['name', 'code', 'price', 'category', 'cart', 'edit', 'delete'],
                 newItem: {
                     name: "",
                     code: "",
@@ -162,6 +161,12 @@
                         && (this.filter.priceFrom <= 0 || e.price >= this.filter.priceFrom)
                         && (this.filter.priceTo <= 0 || e.price <= this.filter.priceTo)
                     )
+                }
+            },
+            fields: {
+                get() {
+                    if (this.$store.getters.isManager) return ['name', 'code', 'price', 'category', 'cart', 'edit', 'delete'];
+                    return ['name', 'code', 'price', 'category', 'cart'];
                 }
             }
         },
@@ -224,8 +229,13 @@
 
 
         created: async function () {
+            if (!this.$store.getters.isAuthenticated) {
+                this.$router.push("/");
+                return;
+            }
             await this.fetchData();
         },
+
     }
 </script>
 

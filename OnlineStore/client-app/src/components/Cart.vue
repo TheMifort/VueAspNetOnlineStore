@@ -30,7 +30,7 @@
                 </div>
             </template>
         </b-table>
-        <b-button v-if="true" @click="order">Order</b-button>
+        <b-button v-if="$store.getters.hasCustomer" @click="order">Order</b-button>
     </div>
 </template>
 
@@ -76,6 +76,10 @@
                 await this.$store.dispatch('ORDER');
                 this.$store.commit('CART_CLEAR');
             }
+        },
+        created() {
+            if (!this.$store.getters.isUser)
+                this.$router.push("/");
         }
     }
 </script>

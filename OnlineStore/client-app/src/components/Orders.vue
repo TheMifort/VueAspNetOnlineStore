@@ -6,13 +6,13 @@
                  :busy="isBusy">
 
             <template v-slot:cell(confirm)="row">
-                <b-button v-if="true" @click="confirm(row)"><i class="fas fa-sm fa-cart-plus"></i></b-button>
+                <b-button @click="confirm(row)"><i class="fas fa-sm fa-cart-plus"></i></b-button>
             </template>
             <template v-slot:cell(complete)="row">
-                <b-button v-if="true" @click="complete(row)"><i class="fas fa-sm fa-edit"></i></b-button>
+                <b-button @click="complete(row)"><i class="fas fa-sm fa-edit"></i></b-button>
             </template>
             <template v-slot:cell(delete)="row">
-                <b-button size="sm" @click="deleteOrder(row)" class="mr-2">
+                <b-button size="sm" v-if="row.item.status === 0" @click="deleteOrder(row)" class="mr-2">
                     <i class="fas fa-sm fa-trash-alt"></i>
                 </b-button>
             </template>
@@ -45,18 +45,6 @@
         data() {
             return {
                 isBusy: false,
-                fields: ['orderNumber',
-                    {
-                        key: 'orderDate', formatter: value => {
-                            if (value === null) return '-';
-                            return moment(value).format('DD.MM.YYYY');
-                        }
-                    }, {
-                        key: 'shipmentDate', formatter: value => {
-                            if (value === null) return '-';
-                            return moment(value).format('DD.MM.YYYY');
-                        }
-                    }, 'confirm', 'complete', 'delete'],
                 order: {},
 
             }
@@ -65,6 +53,34 @@
             orders: {
                 get() {
                     return this.$store.getters.orders;
+                }
+            },
+            fields: {
+                get() {
+                    if (this.$store.getters.isManager) return ['orderNumber',
+                        {
+                            key: 'orderDate', formatter: value => {
+                                if (value === null) return '-';
+                                return moment(value).format('DD.MM.YYYY');
+                            }
+                        }, {
+                            key: 'shipmentDate', formatter: value => {
+                                if (value === null) return '-';
+                                return moment(value).format('DD.MM.YYYY');
+                            }
+                        }, 'confirm', 'complete', 'delete'];
+                    return ['orderNumber',
+                        {
+                            key: 'orderDate', formatter: value => {
+                                if (value === null) return '-';
+                                return moment(value).format('DD.MM.YYYY');
+                            }
+                        }, {
+                            key: 'shipmentDate', formatter: value => {
+                                if (value === null) return '-';
+                                return moment(value).format('DD.MM.YYYY');
+                            }
+                        }, 'delete'];
                 }
             }
         },
@@ -95,7 +111,7 @@
                 this.order = {};
                 this.order = {};
             },
-            async deleteOrder(row){
+            async deleteOrder(row) {
                 await this.$store.dispatch('ORDER_DELETE', row.item);
                 await this.fetchData();
             }
@@ -103,6 +119,10 @@
 
 
         created: async function () {
+            if (!this.$store.getters.isUser && !this.$store.getters.isManager) {
+                this.$router.push("/");
+                return;
+            }
             await this.fetchData();
         },
     }

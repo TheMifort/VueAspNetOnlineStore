@@ -22,15 +22,15 @@
             <b-form-group id="fieldset-1"
                           label="UserName"
                           label-for="input-userName">
-                <b-form-input id="input-userName" v-model="newUser.userName" trim />
+                <b-form-input id="input-userName" v-model="newUser.userName" trim/>
             </b-form-group>
 
             <b-form-group id="fieldset-1"
                           label="Password"
                           label-for="input-new-password">
-                <b-form-input id="input-new-password" type="password" v-model="newUser.password" trim />
+                <b-form-input id="input-new-password" type="password" v-model="newUser.password" trim/>
             </b-form-group>
-            
+
         </b-modal>
 
         <b-modal ref="modal-user" id="modal-user" :title="user.userName" @ok="ok" @cancel="cancel">
@@ -49,7 +49,7 @@
             <b-form-group label="Customer:">
                 <b-form-select v-model="user.customer" class="mb-3">
                     <template v-slot:first>
-                        <option :value="null"> </option>
+                        <option :value="null"></option>
                     </template>
                     <option v-for="customer in customers"
                             :key="customer.id"
@@ -62,7 +62,7 @@
             <b-form-group id="fieldset-1"
                           label="Password"
                           label-for="input-password">
-                <b-form-input id="input-password" type="password" v-model="user.password" trim />
+                <b-form-input id="input-password" type="password" v-model="user.password" trim/>
             </b-form-group>
         </b-modal>
     </div>
@@ -76,7 +76,7 @@
         data() {
             return {
                 isBusy: false,
-                fields: ['id', 'userName', 'customer.name', 'roles'],
+                fields: ['id', 'userName', {key: 'customer.name', label: "Customer"}, 'roles'],
                 newUser: {
                     id: {},
                     userName: "",
@@ -165,6 +165,10 @@
 
 
         created: async function () {
+            if (!this.$store.getters.isManager) {
+                this.$router.push("/");
+                return;
+            }
             await this.fetchData();
         },
     }

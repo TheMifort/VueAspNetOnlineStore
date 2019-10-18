@@ -135,6 +135,10 @@
 
 
         created: async function () {
+            if (!this.$store.getters.isManager) {
+                this.$router.push("/");
+                return;
+            }
             await this.fetchData();
         },
     }

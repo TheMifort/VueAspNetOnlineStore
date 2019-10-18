@@ -21,23 +21,28 @@
         props: {
             msg: String
         },
-        data: function () {
+        data() {
             return {
                 username: "Admin",
                 password: "+"
             };
         },
         methods: {
-            login: function () {
+            login() {
                 const { username, password } = this;
                 this.$store.dispatch("AUTH_REQUEST", { username, password }).then(() => {
-                    alert();
+                    this.$router.push("/");
                 });
             },
-            logoff: function () {
+            logoff() {
                 this.$store.dispatch("AUTH_LOGOUT").then(() => {
-                    alert();
+
                 });
+            }
+        },
+        created() {
+            if (this.$store.getters.isAuthenticated) {
+                this.$router.push("/");
             }
         }
     }</script>
