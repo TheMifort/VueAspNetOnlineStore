@@ -12,6 +12,7 @@ const state = {
 
 const getters = {
     isAuthenticated: state => !!state.token,
+    accessToken: state => state.token,
     isManager: state => state.role === "Manager",
     isUser: state =>  state.role === "User",
     hasCustomer: state => !!state.customerName,

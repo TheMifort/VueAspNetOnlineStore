@@ -25,10 +25,10 @@ axios.interceptors.response.use((response) => {
     return response;
 }, function (error) {
     const originalRequest = error.config;
-
-    if (error.response.status === 401 && !originalRequest._retry) {
-        originalRequest._retry = true;
+    if (error.response.status === 401 && typeof originalRequest.headers["retry"] == 'undefined') {
+        originalRequest.headers['retry'] = true;
         let ret = store.dispatch("AUTH_REFRESH").then(() => {
+            originalRequest.headers['Authorization']="Bearer " + store.getters.accessToken;
             return axios(originalRequest);
         });
         return ret;
