@@ -114,7 +114,7 @@ namespace OnlineStore
                 spa.Options.SourcePath = "client-app";
                 if (env.IsDevelopment())
                 {
-                    spa.UseVueDevelopmentServer(false);
+                    spa.UseVueDevelopmentServer(true);
                 }
             });
         }
