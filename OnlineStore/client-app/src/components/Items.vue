@@ -88,7 +88,7 @@
 
             </b-modal>
 
-            <b-modal ref="modal-item" id="modal-user" title="item.id" @ok="ok" @cancel="cancel">
+            <b-modal ref="modal-item" id="modal-user" :title="item.id" @ok="ok" @cancel="cancel">
                 <b-form-group id="fieldset-1"
                               label="Name"
                               label-for="input-itemName">
@@ -165,7 +165,7 @@
             },
             fields: {
                 get() {
-                    if (this.$store.getters.isManager) return ['name', 'code', 'price', 'category', 'cart', 'edit', 'delete'];
+                    if (this.$store.getters.isManager) return ['name', 'code', 'price', 'category', 'edit', 'delete'];
                     return ['name', 'code', 'price', 'category', 'cart'];
                 }
             }
