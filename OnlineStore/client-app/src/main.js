@@ -25,13 +25,19 @@ axios.interceptors.response.use((response) => {
     return response;
 }, function (error) {
     const originalRequest = error.config;
-    if (error.response.status === 401 && typeof originalRequest.headers["retry"] == 'undefined') {
-        originalRequest.headers['retry'] = true;
-        let ret = store.dispatch("AUTH_REFRESH").then(() => {
-            originalRequest.headers['Authorization']="Bearer " + store.getters.accessToken;
-            return axios(originalRequest);
-        });
-        return ret;
+    if (error.response.status === 401) {
+        if(typeof originalRequest.headers["retry"] == 'undefined') {
+            originalRequest.headers['retry'] = true;
+            let ret = store.dispatch("AUTH_REFRESH").then(() => {
+                originalRequest.headers['Authorization'] = "Bearer " + store.getters.accessToken;
+                return axios(originalRequest);
+            });
+            return ret;
+        }
+        else{
+            store.commit("AUTH_LOGOUT");
+            router.push('/login');
+        }
     }
     return Promise.reject(error);
 });
